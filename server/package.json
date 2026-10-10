@@ -1,0 +1,21 @@
+{
+  "name": "himaya-server",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ang Himaya — REST API (Node + Express) para sa PUP Lopez Campus Student Publication",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "multer": "^2.4.0"
+  }
+}

@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Secrets — commit .env.example instead
+.env
+.env.*
+!.env.example
+
+# Runtime data store (recreated on boot)
+data/store.json
+data/*.tmp
+
+# User-uploaded media (multer destination)
+uploads/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-error.log*

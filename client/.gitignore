@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output (vite -> vercel outputDirectory)
+dist/
+build/
+
+# esbuild bundle for `npm run test:smoke`
+.smoke/
+
+# Vite / tooling caches
+.vite/
+.eslintcache
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*

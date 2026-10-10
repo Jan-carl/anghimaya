@@ -1,0 +1,203 @@
+{
+  "info": {
+    "_postman_id": "ang-himaya-api-collection",
+    "name": "Ang Himaya Publication API",
+    "description": "Postman API Collection for Ang Himaya (PUP Lopez Campus Student Publication) - Supabase & Cloudinary Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health & Status Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "health"]
+        },
+        "description": "Checks backend connection, Supabase status, and Cloudinary status."
+      }
+    },
+    {
+      "name": "2. Portal Staff Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"passcode\": \"himaya2026\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        },
+        "description": "Authenticates editorial staff for ANG Himaya Portal access."
+      }
+    },
+    {
+      "name": "3. Get All Published Articles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/articles",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "articles"]
+        },
+        "description": "Fetch articles for the public broadsheet website."
+      }
+    },
+    {
+      "name": "4. Post News Article (Pangunahing Balita)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"662 Iskolar, Opisyal nang Nagtapos sa Ika-47 Commencement Exercises ng PUP Lopez\",\n  \"type\": \"news\",\n  \"category\": \"Pangunahing Balita\",\n  \"deck\": \"Pormal nang pinagtibay ang pagtatapos ng 662 mag-aaral sa seremonya sa Southern Quezon Convention Center.\",\n  \"body\": \"Buong pagmamalaking ipinagdiwang ng PUP Lopez Campus ang ika-47 Commencement Exercises para sa Taong Panuruan 2025–2026. Sa temang nagpapatibay sa dangal at husay, tinanggap ng mga iskolar ang kanilang diploma. Kasabay nito, ipinagbunyi rin ang 100% passing rate ng Electrical Engineering sa REELE at RMELE Board Exams.\",\n  \"author_name\": \"Lupon ng Patnugutan\",\n  \"author_role\": \"Patnugutan sa Balita\",\n  \"cover_image_url\": \"/assets/uploads/fb_post_1.jpg\",\n  \"image_caption\": \"PUP Lopez Campus • Kuha ng Ang Himaya\",\n  \"read_time\": \"6 min pagbasa\",\n  \"is_lead\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/articles",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "articles"]
+        },
+        "description": "Publishes a lead campus news story."
+      }
+    },
+    {
+      "name": "5. Post Column Commentary (Tinig ng Pluma)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Tindig: Ang Hamon ng Pluma sa Panahon ng Artipisyal na Katalinuhan\",\n  \"type\": \"column\",\n  \"category\": \"Kolum\",\n  \"column_name\": \"Tinig ng Pluma\",\n  \"deck\": \"Bakit mananatiling buhay at makatao ang boses ng estudyanteng manunulat sa gitna ng modernong teknolohiya?\",\n  \"body\": \"Hindi mapapalitan ng anumang makina ang tunay na damdamin, karanasan, at pakikibaka ng mga mag-aaral sa kanayunan. Ang pluma ay nananatiling saksi at sandigan ng katotohanan.\",\n  \"author_name\": \"Jesica F. Laboc\",\n  \"author_role\": \"Punong Patnugot\",\n  \"read_time\": \"4 min pagbasa\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/articles",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "articles"]
+        },
+        "description": "Publishes an opinion/column commentary."
+      }
+    },
+    {
+      "name": "6. Post Editorial (Editoryal)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"MAHAL ANG MAGMAHAL: Ang Bigat ng Krisis Pang-ekonomiya sa Balikat ng mga Iskolar ng Bayan\",\n  \"type\": \"editorial\",\n  \"category\": \"Editoryal\",\n  \"pull_quote\": \"Hindi luho ang mangarap ng magandang kinabukasan; ang bawat sakripisyo ng pamilya sa kanayunan ay dapat suklian ng libreng edukasyon.\",\n  \"body\": \"Sa patuloy na pagtaas ng presyo ng mga bilihin at pamasahe sa lalawigan ng Quezon, lalong nagiging mabigat ang pasanin ng mga mag-aaral. Ang Ang Himaya ay naninindigan para sa kapakanan ng masang iskolar.\",\n  \"author_name\": \"Patnugutan ng Ang Himaya\",\n  \"author_role\": \"Opisyal na Pahayag ng Publikasyon\",\n  \"cover_image_url\": \"/assets/ang-himaya-logo.jpg\",\n  \"image_caption\": \"Asembleya ng mga Iskolar sa Bulwagan ng PUP Lopez\",\n  \"read_time\": \"7 min pagbasa\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/articles",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "articles"]
+        },
+        "description": "Publishes the main editorial statement."
+      }
+    },
+    {
+      "name": "7. Post Literary Piece (Silakbo)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Sa Pagitan ng Tinta at Papel\",\n  \"type\": \"literary\",\n  \"category\": \"Panitikan\",\n  \"deck\": \"Tula para sa bawat manggagawa at mag-aaral sa Quezon.\",\n  \"body\": \"Sa pagitan ng hamog at alikabok ng daan,\\nSumisibol ang tinig ng pag-asa't kapayapaan,\\nDito sa bayan ng Lopez kung saan ang pluma ay sandigan,\\nBawat patak ng tinta ay saksi sa ating kabayanihan.\",\n  \"author_name\": \"Jhon Cedric Dela Cruz\",\n  \"author_role\": \"Patnugot sa Panitikan\",\n  \"read_time\": \"3 min pagbasa\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/articles",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "articles"]
+        },
+        "description": "Publishes a creative poem, essay, or literary work."
+      }
+    },
+    {
+      "name": "8. Upload Image to Cloudinary",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "image",
+              "type": "file",
+              "description": "Select an image file to upload"
+            },
+            {
+              "key": "folder",
+              "value": "ang-himaya/posts",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/upload",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "upload"]
+        },
+        "description": "Uploads an image file to Cloudinary and returns the secure URL."
+      }
+    },
+    {
+      "name": "9. Post Breaking News Ticker",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"BAGONG ULAT: 662 iskolar, opisyal nang nagtapos sa ika-47 Commencement Exercises ng PUP Lopez; 100% passing rate naitala sa REELE/RMELE Licensure Exams!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/ticker",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "ticker"]
+        },
+        "description": "Broadcasts a live breaking news dispatch to the website ticker."
+      }
+    }
+  ]
+}

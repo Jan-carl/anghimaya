@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="tl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANG Himaya Portal | Tanggapan ng Patnugutan</title>
+  <link rel="icon" type="image/png" href="/anghimayalogo.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    :root {
+      --pup-maroon: #6B0E1A;
+      --pup-maroon-dark: #4A0710;
+      --pup-maroon-deep: #1F0307;
+      --pup-gold: #C59B27;
+      --pup-gold-light: #FFD166;
+      --bg-cream: #F8F6F2;
+      --card-bg: #FFFFFF;
+      --border-color: #E2DDD6;
+      --border-dark: #2A060C;
+      --text-main: #1D1917;
+      --text-muted: #665E58;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-editorial: 'Newsreader', Georgia, serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-cream);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP HEADER BAR */
+    .portal-header {
+      background: linear-gradient(135deg, var(--pup-maroon-deep) 0%, var(--pup-maroon-dark) 100%);
+      color: #FFFFFF;
+      border-bottom: 2px solid var(--pup-gold);
+      padding: 0.85rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .portal-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .portal-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: #FFFFFF;
+    }
+
+    .portal-logo-img {
+      height: 44px;
+      width: auto;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    }
+
+    .portal-title-box h1 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+
+    .portal-title-box span {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--pup-gold-light);
+      font-weight: 600;
+    }
+
+    .portal-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #10B981;
+      display: inline-block;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #FFFFFF;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: #FFFFFF;
+    }
+
+    /* LOGIN SCREEN STATE */
+    .portal-login-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .portal-login-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(74, 7, 16, 0.08);
+      max-width: 420px;
+      width: 100%;
+      padding: 2.25rem 2rem;
+      text-align: center;
+    }
+
+    .portal-login-card img {
+      height: 72px;
+      margin: 0 auto 1.25rem;
+      display: block;
+    }
+
+    .portal-login-title {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--pup-maroon);
+      margin-bottom: 0.35rem;
+    }
+
+    .portal-login-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: var(--text-main);
+      background-color: #FFFFFF;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--pup-maroon);
+      box-shadow: 0 0 0 3px rgba(107, 14, 26, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 140px;
+      line-height: 1.6;
+    }
+
+    .btn-primary {
+      background: var(--pup-maroon);
+      color: #FFFFFF;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--pup-maroon-dark);
+      box-shadow: 0 4px 12px rgba(107, 14, 26, 0.25);
+    }
+
+    /* DASHBOARD CONTENT */
+    .portal-main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .portal-tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .portal-tab-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.75rem 1.15rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      position: relative;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .portal-tab-btn:hover {
+      color: var(--pup-maroon);
+      background: rgba(107, 14, 26, 0.04);
+    }
+
+    .portal-tab-btn.active {
+      color: var(--pup-maroon);
+      font-weight: 800;
+      border-bottom: 3px solid var(--pup-maroon);
+      background: #FFFFFF;
+    }
+
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 960px) {
+      .portal-grid {
+        grid-template-columns: 7fr 5fr;
+      }
+    }
+
+    .portal-panel {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.75rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .portal-panel-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--pup-maroon);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* UPLOAD DROPZONE */
+    .upload-box {
+      border: 2px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      background: var(--bg-cream);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .upload-box:hover, .upload-box.dragover {
+      border-color: var(--pup-maroon);
+      background: rgba(107, 14, 26, 0.03);
+    }
+
+    .upload-preview {
+      margin-top: 1rem;
+      max-height: 200px;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      display: none;
+    }
+
+    /* ARTICLES LIST */
+    .article-item {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .article-item:last-child {
+      border-bottom: none;
+    }
+
+    .article-meta {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--pup-gold);
+      font-weight: 700;
+    }
+
+    .article-title-link {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      text-decoration: none;
+      line-height: 1.35;
+      display: block;
+      margin: 0.25rem 0;
+    }
+
+    .article-title-link:hover {
+      color: var(--pup-maroon);
+    }
+
+    .article-byline {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .btn-delete {
+      background: transparent;
+      border: 1px solid #F87171;
+      color: #DC2626;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-delete:hover {
+      background: #FEE2E2;
+    }
+
+    /* TOAST ALERT */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--pup-maroon-dark);
+      color: #FFFFFF;
+      padding: 0.85rem 1.35rem;
+      border-radius: 6px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      border-left: 4px solid var(--pup-gold);
+      font-size: 0.82rem;
+      font-weight: 600;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PORTAL HEADER BAR -->
+  <header class="portal-header">
+    <div class="portal-header-inner">
+      <a href="/portal.html" class="portal-brand">
+        <img src="/anghimayalogo.png" alt="Ang Himaya Emblem" class="portal-logo-img" />
+        <div class="portal-title-box">
+          <h1>ANG HIMAYA PORTAL</h1>
+          <span>Tanggapan ng Patnugutan • PUP Lopez Campus</span>
+        </div>
+      </a>
+
+      <div class="portal-nav-actions">
+        <div class="status-badge" id="backend-status-badge">
+          <span class="status-dot"></span>
+          <span id="backend-status-text">Server: Connecting...</span>
+        </div>
+
+        <a href="/" target="_blank" class="btn-secondary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          <span>Tingnan ang Pahayagan</span>
+        </a>
+
+        <button id="logout-btn" class="btn-secondary" style="display: none;">
+          Mag-logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- 1. LOGIN SCREEN (Visible if unauthenticated)                 -->
+  <!-- ============================================================ -->
+  <div id="login-section" class="portal-login-wrap">
+    <div class="portal-login-card">
+      <img src="/anghimayalogo.png" alt="Ang Himaya" />
+      <h2 class="portal-login-title">Portal ng Patnugutan</h2>
+      <p class="portal-login-sub">
+        Ipasok ang opisyal na passcode ng Tanggapan ng Patnugutan upang maglathala ng mga balita, kolum, editoryal, at likhang-panitikan.
+      </p>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-passcode">Editorial Passcode</label>
+          <input type="password" id="login-passcode" class="form-input" placeholder="••••••••••••" value="himaya2026" required />
+          <span style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 0.35rem;">Default: himaya2026 (nababago sa .env)</span>
+        </div>
+
+        <button type="submit" class="btn-primary" id="login-submit-btn">
+          <span>Pumasok sa Portal</span>
+          <span>→</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 2. MAIN EDITORIAL DASHBOARD (Visible when logged in)         -->
+  <!-- ============================================================ -->
+  <main id="dashboard-section" class="portal-main" style="display: none;">
+
+    <!-- Editorial Category Tabs -->
+    <div class="portal-tabs">
+      <button class="portal-tab-btn active" data-tab="news">📰 Pangunahing Balita</button>
+      <button class="portal-tab-btn" data-tab="column">✍️ Kolum at Opinyon</button>
+      <button class="portal-tab-btn" data-tab="editorial">📜 Editoryal</button>
+      <button class="portal-tab-btn" data-tab="feature">📖 Lathalain (Features)</button>
+      <button class="portal-tab-btn" data-tab="literary">🎨 Silakbo (Panitikan/Sining)</button>
+      <button class="portal-tab-btn" data-tab="ticker">⚡ Kagyat na Ulat (Ticker)</button>
+    </div>
+
+    <!-- Editorial Grid (Left: Form | Right: Published List) -->
+    <div class="portal-grid">
+
+      <!-- LEFT: PUBLISH FORM -->
+      <div class="portal-panel">
+        <div class="portal-panel-title">
+          <span id="form-heading">Maglathala ng Pangunahing Balita</span>
+          <span style="font-size: 0.72rem; color: var(--pup-gold); font-weight: 700; text-transform: uppercase;" id="form-badge">News Beat</span>
+        </div>
+
+        <form id="article-form">
+          <input type="hidden" id="post-type" value="news" />
+
+          <!-- Dynamic Column Name (Only for Kolum) -->
+          <div class="form-group" id="group-column-name" style="display: none;">
+            <label class="form-label" for="post-column-name">Pangalan ng Kolum</label>
+            <input type="text" id="post-column-name" class="form-input" placeholder="Halimbawa: Tinig ng Pluma, Puntirya, Taliba" />
+          </div>
+
+          <!-- Title -->
+          <div class="form-group">
+            <label class="form-label" for="post-title">Pamagat / Headline</label>
+            <input type="text" id="post-title" class="form-input" placeholder="Ilagay ang kapansin-pansing headline ng balita..." required />
+          </div>
+
+          <!-- Dek / Excerpt -->
+          <div class="form-group">
+            <label class="form-label" for="post-deck">Dek / Buod (Lead Deck)</label>
+            <input type="text" id="post-deck" class="form-input" placeholder="Maikling buod o pambungad na pangungusap..." />
+          </div>
+
+          <!-- Pull Quote (Only for Editorial / Feature) -->
+          <div class="form-group" id="group-pull-quote" style="display: none;">
+            <label class="form-label" for="post-pull-quote">Editoryal na Sipi (Pull Quote)</label>
+            <input type="text" id="post-pull-quote" class="form-input" placeholder="Halimbawa: 'Hindi luho ang mangarap ng magandang kinabukasan...'" />
+          </div>
+
+          <!-- Author Byline & Role -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="post-author">May-akda (Byline)</label>
+              <input type="text" id="post-author" class="form-input" placeholder="Jesica F. Laboc" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="post-role">Tungkulin / Posisyon</label>
+              <input type="text" id="post-role" class="form-input" placeholder="Punong Patnugot" />
+            </div>
+          </div>
+
+          <!-- Image Upload / Cloudinary Section -->
+          <div class="form-group">
+            <label class="form-label">Larawan ng Ulat (Cloudinary / File Upload)</label>
+            <div class="upload-box" id="dropzone">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 0.5rem; color: var(--pup-maroon);">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <div style="font-size: 0.8rem; font-weight: 600;">I-drag at i-drop ang larawan dito, o mag-click para pumili</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Awtomatikong ia-upload sa Cloudinary / Storage (JPG, PNG, WebP)</div>
+              <input type="file" id="file-input" accept="image/*" style="display: none;" />
+              <img id="image-preview" class="upload-preview" alt="Preview ng Larawan" />
+            </div>
+            <input type="hidden" id="post-image-url" />
+          </div>
+
+          <!-- Image Caption -->
+          <div class="form-group">
+            <label class="form-label" for="post-caption">Paliwanag sa Larawan (Caption & Photo Credit)</label>
+            <input type="text" id="post-caption" class="form-input" placeholder="PUP Lopez Campus • Kuha ng Ang Himaya" />
+          </div>
+
+          <!-- Body Content -->
+          <div class="form-group">
+            <label class="form-label" for="post-body">Buong Nilalaman ng Ulat / Sanaysay / Tula</label>
+            <textarea id="post-body" class="form-textarea" placeholder="Isulat o i-paste ang buong teksto ng artikulo dito..." required></textarea>
+          </div>
+
+          <!-- Lead Story Option (Only for news) -->
+          <div class="form-group" id="group-lead-checkbox">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;">
+              <input type="checkbox" id="post-is-lead" style="width: 16px; height: 16px; accent-color: var(--pup-maroon);" />
+              <span>Gawing Pangunahing Spotlight Story (Lead Story sa Gitna ng Pahayagan)</span>
+            </label>
+          </div>
+
+          <!-- Actions -->
+          <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button type="submit" class="btn-primary" id="publish-submit-btn">
+              <span>✦ Ilathala sa Pahayagan</span>
+            </button>
+            <button type="reset" class="btn-secondary" style="color: var(--text-main); border-color: var(--border-color);" id="reset-form-btn">
+              I-clear
+            </button>
+          </div>
+        </form>
+
+        <!-- SPECIAL TICKER FORM (Hidden by default, shown when Ticker tab is active) -->
+        <form id="ticker-form" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="ticker-message">Mensahe ng Kagyat na Ulat (Breaking Flash Alert)</label>
+            <textarea id="ticker-message" class="form-textarea" placeholder="Halimbawa: BAGONG ULAT: 662 iskolar, pormal nang nagtapos sa ika-47 Commencement Exercises ng PUP Lopez..." required style="min-height: 80px;"></textarea>
+          </div>
+          <button type="submit" class="btn-primary">
+            <span>⚡ I-broadcast ang Kagyat na Ulat</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT: PUBLISHED ARTICLES ROSTER -->
+      <div class="portal-panel">
+        <div class="portal-panel-title">
+          <span>Mga Nailathala sa Pahayagan</span>
+          <span style="font-size: 0.72rem; color: var(--text-muted);" id="articles-count">0 artikulo</span>
+        </div>
+
+        <div id="articles-list">
+          <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.82rem;">
+            Kinukuha ang listahan ng mga nailathala...
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast">Aksyon naisakatuparan!</div>
+
+  <script>
+    const API_BASE = 'http://localhost:5000/api';
+
+    // State
+    let authToken = localStorage.getItem('himaya_portal_token') || null;
+    let currentTab = 'news';
+
+    // Isang daanan para sa lahat ng tawag sa API — awtomatikong
+    // isinasama ang session token para sa mga protected na ruta.
+    function apiFetch(path, options = {}) {
+      const headers = new Headers(options.headers || {});
+      if (authToken) headers.set('Authorization', `Bearer ${authToken}`);
+      return fetch(`${API_BASE}${path}`, { ...options, headers });
+    }
+
+    // Elements
+    const loginSection = document.getElementById('login-section');
+    const dashboardSection = document.getElementById('dashboard-section');
+    const loginForm = document.getElementById('login-form');
+    const logoutBtn = document.getElementById('logout-btn');
+    const backendStatusText = document.getElementById('backend-status-text');
+    const toast = document.getElementById('toast');
+
+    // Tab buttons & Form elements
+    const tabButtons = document.querySelectorAll('.portal-tab-btn');
+    const articleForm = document.getElementById('article-form');
+    const tickerForm = document.getElementById('ticker-form');
+    const formHeading = document.getElementById('form-heading');
+    const formBadge = document.getElementById('form-badge');
+    const postTypeInput = document.getElementById('post-type');
+    const groupColumnName = document.getElementById('group-column-name');
+    const groupPullQuote = document.getElementById('group-pull-quote');
+    const groupLeadCheckbox = document.getElementById('group-lead-checkbox');
+    const articlesList = document.getElementById('articles-list');
+    const articlesCount = document.getElementById('articles-count');
+
+    // Upload elements
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const imagePreview = document.getElementById('image-preview');
+    const postImageUrl = document.getElementById('post-image-url');
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // Check Server Health
+    async function checkHealth() {
+      try {
+        const res = await fetch(`${API_BASE}/health`);
+        if (res.ok) {
+          const data = await res.json();
+          const dbLabel = data.database === 'supabase' ? 'Supabase Connected' : 'Local Store (Ready)';
+          const cloudLabel = data.cloudinary ? 'Cloudinary' : 'Local Uploads';
+          backendStatusText.textContent = `${dbLabel} • ${cloudLabel}`;
+        } else {
+          backendStatusText.textContent = 'Server: Offline (npm run server)';
+        }
+      } catch (err) {
+        backendStatusText.textContent = 'Server: Offline';
+      }
+    }
+    checkHealth();
+
+    // Init Auth view
+    function updateAuthView() {
+      if (authToken) {
+        loginSection.style.display = 'none';
+        dashboardSection.style.display = 'block';
+        logoutBtn.style.display = 'inline-flex';
+        loadArticles();
+      } else {
+        loginSection.style.display = 'flex';
+        dashboardSection.style.display = 'none';
+        logoutBtn.style.display = 'none';
+      }
+    }
+    updateAuthView();
+
+    // Login Form Submit
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const passcode = document.getElementById('login-passcode').value;
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          authToken = data.token;
+          localStorage.setItem('himaya_portal_token', authToken);
+          showToast('Maligayang pagdating sa Tanggapan ng Patnugutan!');
+          updateAuthView();
+        } else {
+          showToast(data.error || 'Maling passcode.');
+        }
+      } catch (err) {
+        showToast('Hindi makakonekta sa backend server.');
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      authToken = null;
+      localStorage.removeItem('himaya_portal_token');
+      showToast('Naka-logout na sa portal.');
+      updateAuthView();
+    });
+
+    // Tab Switcher
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tabButtons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTab = btn.getAttribute('data-tab');
+
+        if (currentTab === 'ticker') {
+          articleForm.style.display = 'none';
+          tickerForm.style.display = 'block';
+          formHeading.textContent = 'Mag-broadcast ng Kagyat na Ulat (Breaking Ticker)';
+          formBadge.textContent = 'Ticker Alert';
+        } else {
+          articleForm.style.display = 'block';
+          tickerForm.style.display = 'none';
+          configureFormForTab(currentTab);
+        }
+        loadArticles();
+      });
+    });
+
+    function configureFormForTab(tab) {
+      postTypeInput.value = tab;
+      groupColumnName.style.display = tab === 'column' ? 'block' : 'none';
+      groupPullQuote.style.display = (tab === 'editorial' || tab === 'feature') ? 'block' : 'none';
+      groupLeadCheckbox.style.display = tab === 'news' ? 'block' : 'none';
+
+      switch (tab) {
+        case 'news':
+          formHeading.textContent = 'Maglathala ng Pangunahing Balita';
+          formBadge.textContent = 'Balita';
+          break;
+        case 'column':
+          formHeading.textContent = 'Maglathala ng Kolum at Opinyon';
+          formBadge.textContent = 'Tinig at Paninindigan';
+          break;
+        case 'editorial':
+          formHeading.textContent = 'Maglathala ng Opisyal na Editoryal';
+          formBadge.textContent = 'Posisyon ng Publikasyon';
+          break;
+        case 'feature':
+          formHeading.textContent = 'Maglathala ng Lathalain at Pagsusuri';
+          formBadge.textContent = 'Medium / Pacesetter Long-read';
+          break;
+        case 'literary':
+          formHeading.textContent = 'Maglathala sa Silakbo (Panitikan at Sining)';
+          formBadge.textContent = 'Tula / Sanaysay / Dibuho';
+          break;
+      }
+    }
+
+    // Cloudinary / Local Upload Drag & Drop
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      if (e.dataTransfer.files?.[0]) {
+        handleFileUpload(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files?.[0]) {
+        handleFileUpload(e.target.files[0]);
+      }
+    });
+
+    async function handleFileUpload(file) {
+      showToast('Ipinapadala ang larawan sa Cloudinary...');
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('folder', 'ang-himaya');
+
+      try {
+        const res = await apiFetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          postImageUrl.value = data.url;
+          imagePreview.src = data.url;
+          imagePreview.style.display = 'block';
+          showToast(`Matagumpay na na-upload! (${data.provider === 'cloudinary' ? 'Cloudinary' : 'Local Storage'})`);
+        } else {
+          showToast(data.error || 'Nabigo ang upload.');
+        }
+      } catch (err) {
+        showToast('Nabigo ang pag-upload ng file.');
+      }
+    }
+
+    // Article Form Submit
+    articleForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const type = postTypeInput.value;
+      let category = 'Pangunahing Balita';
+      if (type === 'column') category = 'Kolum';
+      if (type === 'editorial') category = 'Editoryal';
+      if (type === 'feature') category = 'Lathalain';
+      if (type === 'literary') category = 'Panitikan';
+
+      const payload = {
+        title: document.getElementById('post-title').value,
+        type: type,
+        category: category,
+        deck: document.getElementById('post-deck').value,
+        body: document.getElementById('post-body').value,
+        author_name: document.getElementById('post-author').value,
+        author_role: document.getElementById('post-role').value || 'Kawani ng Ang Himaya',
+        column_name: document.getElementById('post-column-name').value,
+        pull_quote: document.getElementById('post-pull-quote').value,
+        cover_image_url: postImageUrl.value || '',
+        image_caption: document.getElementById('post-caption').value || '',
+        is_lead: document.getElementById('post-is-lead').checked,
+        read_time: '4 min pagbasa'
+      };
+
+      try {
+        const res = await apiFetch('/articles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Matagumpay na nailathala sa pahayagan!');
+          articleForm.reset();
+          imagePreview.style.display = 'none';
+          postImageUrl.value = '';
+          loadArticles();
+        } else {
+          showToast(data.error || 'Nabigong ilathala.');
+        }
+      } catch (err) {
+        showToast('Nagka-error sa pagsusumite.');
+      }
+    });
+
+    // Ticker Form Submit
+    tickerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = document.getElementById('ticker-message').value;
+      try {
+        const res = await apiFetch('/ticker', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+        if (res.ok) {
+          showToast('Nai-broadcast ang kagyat na ulat sa ticker!');
+          tickerForm.reset();
+          loadArticles();
+        }
+      } catch (err) {
+        showToast('Nabigo ang pag-broadcast.');
+      }
+    });
+
+    // Load Articles List
+    async function loadArticles() {
+      try {
+        const res = await fetch(`${API_BASE}/articles`);
+        const result = await res.json();
+        const articles = result.data || [];
+
+        articlesCount.textContent = `${articles.length} artikulo`;
+
+        if (articles.length === 0) {
+          articlesList.innerHTML = `
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 0.85rem;">
+              <p>Wala pang nailalathalang artikulo.</p>
+              <p style="font-size: 0.75rem; margin-top: 0.5rem; color: var(--pup-maroon);">Gamitin ang form sa kaliwa upang magdagdag ng unang ulat o kolum!</p>
+            </div>
+          `;
+          return;
+        }
+
+        articlesList.innerHTML = articles.map((art) => `
+          <div class="article-item">
+            <div>
+              <span class="article-meta">${art.category || art.type} ${art.is_lead ? '✦ LEAD STORY' : ''}</span>
+              <a href="/#${art.type}" target="_blank" class="article-title-link">${art.title}</a>
+              <div class="article-byline">Ni ${art.author_name} • ${new Date(art.published_at || art.created_at).toLocaleDateString()}</div>
+            </div>
+            <button class="btn-delete" onclick="deleteArticle('${art.id}')">Burahin</button>
+          </div>
+        `).join('');
+      } catch (err) {
+        articlesList.innerHTML = `<div style="color: #DC2626; font-size: 0.8rem; padding: 1rem;">Hindi makakonekta sa API server.</div>`;
+      }
+    }
+
+    // Delete Article
+    window.deleteArticle = async function (id) {
+      if (!confirm('Sigurado ka bang nais mong burahin ang artikulong ito sa pahayagan?')) return;
+      try {
+        const res = await apiFetch(`/articles/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          showToast('Nabura ang artikulo.');
+          loadArticles();
+        } else {
+          showToast('Nabigong burahin.');
+        }
+      } catch (err) {
+        showToast('Nagka-problema sa pagbura.');
+      }
+    };
+  </script>
+
+</body>
+
+</html>

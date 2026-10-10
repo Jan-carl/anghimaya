@@ -1,0 +1,69 @@
+import { useState } from 'react';
+import { useContent } from './hooks/useContent.js';
+import { SceneHero } from './scene/SceneHero.jsx';
+import { SceneErrorBoundary } from './scene/SceneErrorBoundary.jsx';
+import { NavBar } from './components/NavBar.jsx';
+import { TopStory } from './components/TopStory.jsx';
+import { Voices } from './components/Voices.jsx';
+import { Silakbo } from './components/Silakbo.jsx';
+import { Editions } from './components/Editions.jsx';
+import { Masthead } from './components/Masthead.jsx';
+import { Subscribe } from './components/Subscribe.jsx';
+import { Footer } from './components/Footer.jsx';
+import { ArticleReader } from './components/ArticleReader.jsx';
+
+/**
+ * Ang pahayagan: 3D hero sa itaas, saka ang modernong nilalaman sa ibaba.
+ * Nananatiling fixed ang canvas habang dumadaloy ang mga seksyon sa ibabaw nito.
+ * May kasamang Reader Mode na hango sa thefrontman.ph para sa "Basahin pa.." at mga artikulo.
+ */
+export function App() {
+  const content = useContent();
+  const [readingArticle, setReadingArticle] = useState(null);
+
+  return (
+    <>
+      <SceneErrorBoundary>
+        <SceneHero />
+      </SceneErrorBoundary>
+
+      <div className="publication" id="top">
+        <NavBar articles={content.articles} onSelectArticle={setReadingArticle} />
+
+        <main>
+          <TopStory
+            lead={content.lead}
+            news={content.news}
+            onSelectArticle={setReadingArticle}
+          />
+          <Voices
+            editorial={content.editorial}
+            columns={content.columns}
+            feature={content.feature}
+            onSelectArticle={setReadingArticle}
+          />
+          <Silakbo
+            spotlight={content.literary.spotlight}
+            rest={content.literary.rest}
+            onSelectArticle={setReadingArticle}
+          />
+          <Editions editions={content.editions} />
+          <Masthead />
+          <Subscribe />
+        </main>
+
+        <Footer />
+      </div>
+
+      {/* THE FRONTMAN ARTICLE READER VIEW (Hango sa reference screenshot ng user) */}
+      {readingArticle ? (
+        <ArticleReader
+          article={readingArticle}
+          onClose={() => setReadingArticle(null)}
+        />
+      ) : null}
+    </>
+  );
+}
+
+export default App;

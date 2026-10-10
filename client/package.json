@@ -1,0 +1,24 @@
+{
+  "name": "himaya-client",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ang Himaya — React front-end (3D mountain hero + modern publication UI)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:smoke": "esbuild smoke.test.jsx --bundle --packages=external --platform=node --format=esm --jsx=automatic --define:import.meta.env={} --outfile=.smoke/smoke.mjs --log-level=error && node .smoke/smoke.mjs"
+  },
+  "dependencies": {
+    "lenis": "^1.1.18",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.28.2",
+    "vite": "^6.0.0"
+  }
+}
