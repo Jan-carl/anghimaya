@@ -34,6 +34,12 @@ export class HimayaScene {
     this.isRenderingActive = true;
     this.forcePaused = false;
 
+    this.tier = this.detectTier();
+    this.currentPixelRatio = this.tier.maxPixelRatio;
+    this.frameCount = 0;
+    this.frameTimeAccum = 0;
+    this.fpsMonitorEnabled = this.tier.isLowPower || this.tier.isMobile;
+
     this.audio = {
       ctx: null,
       element: null,
@@ -51,6 +57,39 @@ export class HimayaScene {
     this.initSmoothScroll();
     this.bindEvents();
     this.startLoop();
+  }
+
+  detectTier() {
+    if (typeof window === 'undefined') {
+      return { isMobile: false, isTouch: false, isLowPower: false, maxPixelRatio: 1.5, antialias: true, lightTier: 'high' };
+    }
+
+    const isMobile =
+      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      window.innerWidth <= 768;
+
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isLowMemory = Boolean(navigator.deviceMemory && navigator.deviceMemory <= 4);
+    const isLowCpu = Boolean(navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+    const prefersReducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
+
+    const isLowPower = Boolean(isMobile || isLowMemory || isLowCpu || prefersReducedMotion);
+
+    // Sa mobile / lower devices, ang DPR na 1.0 hanggang 1.2 ay napakalinaw na pero
+    // nagbabawas ng 60%-75% ng fragment shader load kumpara sa walang takip na DPR 2 o 3.
+    const maxPixelRatio = isMobile
+      ? Math.min(window.devicePixelRatio || 1, 1.2)
+      : Math.min(window.devicePixelRatio || 1, 1.5);
+
+    return {
+      isMobile,
+      isTouch,
+      isLowPower,
+      maxPixelRatio,
+      // Sa high-DPI screens, hindi kailangan ang MSAA at malaking tipid sa bandwidth
+      antialias: !isMobile,
+      lightTier: isLowPower ? 'optimized' : 'full',
+    };
   }
 
   // ---------------------------------------------------------------- renderer
@@ -74,16 +113,16 @@ export class HimayaScene {
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
-      antialias: true,
+      antialias: this.tier.antialias,
       alpha: true,
       powerPreference: 'high-performance',
+      precision: this.tier.isMobile ? 'mediump' : 'highp',
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, rendererCfg.maxPixelRatio));
+    this.renderer.setPixelRatio(this.currentPixelRatio);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = rendererCfg.exposure;
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.enabled = false;
 
     this.lights = new THREE.Group();
     this.scene.add(this.lights);
@@ -91,17 +130,34 @@ export class HimayaScene {
     const ambient = new THREE.AmbientLight(sceneConfig.ambient.color, sceneConfig.ambient.intensity);
     this.lights.add(ambient);
 
-    sceneConfig.dirLights.forEach(({ pos, color, intensity }) => {
-      const light = new THREE.DirectionalLight(color, intensity);
-      light.position.set(...pos);
-      this.lights.add(light);
-    });
+    if (this.tier.lightTier === 'full') {
+      sceneConfig.dirLights.forEach(({ pos, color, intensity }) => {
+        const light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(...pos);
+        this.lights.add(light);
+      });
 
-    sceneConfig.pointLights.forEach(({ pos, color, intensity, distance, decay }) => {
-      const light = new THREE.PointLight(color, intensity, distance, decay);
-      light.position.set(...pos);
-      this.lights.add(light);
-    });
+      sceneConfig.pointLights.forEach(({ pos, color, intensity, distance, decay }) => {
+        const light = new THREE.PointLight(color, intensity, distance, decay);
+        light.position.set(...pos);
+        this.lights.add(light);
+      });
+    } else {
+      // Optimized lighting profile para sa phones / lower-tier devices:
+      // Pinapanatili ang pangunahing key light at maroon rim light
+      const dir1 = new THREE.DirectionalLight(sceneConfig.dirLights[0].color, sceneConfig.dirLights[0].intensity);
+      dir1.position.set(...sceneConfig.dirLights[0].pos);
+      this.lights.add(dir1);
+
+      const dir2 = new THREE.DirectionalLight(sceneConfig.dirLights[1].color, sceneConfig.dirLights[1].intensity);
+      dir2.position.set(...sceneConfig.dirLights[1].pos);
+      this.lights.add(dir2);
+
+      // Pinagsamang accent point light para sa subtle warm ambiance
+      const accent = new THREE.PointLight(0xfff0d0, 10, 45, 1);
+      accent.position.set(0, 5, 5);
+      this.lights.add(accent);
+    }
 
     // Warm key light + maroon bounce, nakatuon sa sagisag.
     const emblemTarget = new THREE.Object3D();
@@ -113,10 +169,12 @@ export class HimayaScene {
     key.target = emblemTarget;
     this.lights.add(key);
 
-    const bounce = new THREE.DirectionalLight(sceneConfig.maroonBounceLight.color, sceneConfig.maroonBounceLight.intensity);
-    bounce.position.set(...sceneConfig.maroonBounceLight.pos);
-    bounce.target = emblemTarget;
-    this.lights.add(bounce);
+    if (this.tier.lightTier === 'full') {
+      const bounce = new THREE.DirectionalLight(sceneConfig.maroonBounceLight.color, sceneConfig.maroonBounceLight.intensity);
+      bounce.position.set(...sceneConfig.maroonBounceLight.pos);
+      bounce.target = emblemTarget;
+      this.lights.add(bounce);
+    }
 
     // Radiant na celestial sun aura sa likod ng sagisag.
     this.sunTexture = new THREE.TextureLoader().load(sceneConfig.sun.texture);
@@ -146,8 +204,9 @@ export class HimayaScene {
 
   initLoaders() {
     this.draco = new DRACOLoader();
-    this.draco.setDecoderPath('/draco/gltf/');
-
+    // Opisyal na Google Draco CDN decoders: may garantisadong application/wasm MIME type,
+    // CORS access, at mabilis na edge caching para hindi mabigo ang GLTFLoader sa Vercel.
+    this.draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
     this.gltf = new GLTFLoader();
     this.gltf.setDRACOLoader(this.draco);
 
@@ -166,8 +225,8 @@ export class HimayaScene {
       if (!child.isMesh || child.userData.wireframeOverlay) return;
 
       child.material = new THREE.MeshStandardMaterial({ color: baseColor, roughness, metalness });
-      child.castShadow = true;
-      child.receiveShadow = true;
+      child.castShadow = false;
+      child.receiveShadow = false;
       child.geometry.computeBoundingBox();
 
       meshes.push({
@@ -196,13 +255,30 @@ export class HimayaScene {
   }
 
   createWaveTarget(wave, bMin, bMax, wireColor = '#ffd166') {
+    // Pre-calculate direction, near, and span minsan lamang para walang garbage collection sa render loop
+    const tilt = new THREE.Vector3(wave.tiltX, 1, wave.tiltZ).normalize();
+    const near = new THREE.Vector3(
+      tilt.x >= 0 ? bMin.x : bMax.x,
+      tilt.y >= 0 ? bMin.y : bMax.y,
+      tilt.z >= 0 ? bMin.z : bMax.z,
+    );
+    const far = new THREE.Vector3(
+      tilt.x >= 0 ? bMax.x : bMin.x,
+      tilt.y >= 0 ? bMax.y : bMin.y,
+      tilt.z >= 0 ? bMax.z : bMin.z,
+    );
+    const span = Math.max(
+      far.x * tilt.x + far.y * tilt.y + far.z * tilt.z - (near.x * tilt.x + near.y * tilt.y + near.z * tilt.z),
+      0.001,
+    );
+
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
         uColor: { value: new THREE.Color(wireColor) },
-        uDirection: { value: new THREE.Vector3() },
-        uMin: { value: new THREE.Vector3() },
-        uSpan: { value: 1 },
+        uDirection: { value: tilt },
+        uMin: { value: near },
+        uSpan: { value: span },
         uSpeed: { value: wave.speed },
         uCount: { value: wave.count },
         uWidth: { value: wave.width },
@@ -275,8 +351,8 @@ export class HimayaScene {
             child.castShadow = false;
             child.receiveShadow = false;
           } else {
-            child.castShadow = true;
-            child.receiveShadow = true;
+            child.castShadow = false;
+            child.receiveShadow = false;
           }
         });
 
@@ -484,14 +560,12 @@ export class HimayaScene {
   pauseRendering() {
     this.forcePaused = true;
     this.isRenderingActive = false;
-    if (this.canvas) this.canvas.style.visibility = 'hidden';
   }
 
   resumeRendering() {
     this.forcePaused = false;
     if (this.scrollProgress < 1.0) {
       this.isRenderingActive = true;
-      if (this.canvas) this.canvas.style.visibility = '';
       this.clock.getDelta();
     }
   }
@@ -499,7 +573,13 @@ export class HimayaScene {
   // --------------------------------------------------------- scroll + events
 
   initSmoothScroll() {
-    this.lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: true });
+    // Para sa mga touch/mobile device, i-off ang syncTouch upang hindi ma-hijack
+    // ang native GPU composited touch scrolling ng browser, na siyang nagdudulot ng lag.
+    this.lenis = new Lenis({
+      lerp: this.tier.isTouch ? 0.12 : 0.1,
+      smoothWheel: true,
+      syncTouch: false,
+    });
     this.lenis.on('scroll', (event) => this.handleScroll(event));
   }
 
@@ -522,7 +602,6 @@ export class HimayaScene {
     // Kung nag-scroll pataas pabalik sa 3D hero, ibalik agad ang rendering
     if (this.scrollProgress < 1.0 && !this.isRenderingActive && !this.forcePaused) {
       this.isRenderingActive = true;
-      if (this.canvas) this.canvas.style.visibility = '';
       this.clock.getDelta();
     }
   }
@@ -533,29 +612,27 @@ export class HimayaScene {
       this.camera.aspect = window.innerWidth / window.innerHeight;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, sceneConfig.renderer.maxPixelRatio));
+      this.renderer.setPixelRatio(this.currentPixelRatio);
     };
 
     const onMouseMove = (event) => {
+      // Huwag mag-aksaya ng mouse tracking sa mobile / touch devices
+      if (this.tier.isTouch) return;
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
     const onVisibilityChange = () => {
       if (document.hidden) {
-        if (this.isRenderingActive) {
-          this.isRenderingActive = false;
-          if (this.canvas) this.canvas.style.visibility = 'hidden';
-        }
+        this.isRenderingActive = false;
       } else if (this.scrollProgress < 1.0 && !this.forcePaused) {
         this.isRenderingActive = true;
-        if (this.canvas) this.canvas.style.visibility = '';
         this.clock.getDelta();
       }
     };
 
     window.addEventListener('resize', onResize);
-    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
     document.addEventListener('visibilitychange', onVisibilityChange);
     this.disposers.push(() => window.removeEventListener('resize', onResize));
     this.disposers.push(() => window.removeEventListener('mousemove', onMouseMove));
@@ -573,35 +650,50 @@ export class HimayaScene {
       this.lenis?.raf(time);
 
       // Kapag nakarating na sa editorial content (100% natakpan ng publication shell),
-      // o kapag naka-force pause (hal. binuksan ang ArticleReader), itigil ang 3D render loop
-      // upang makatipid ng GPU at CPU resources.
+      // o kapag naka-force pause (hal. ArticleReader),
+      // itigil ang 3D render loop upang makatipid ng GPU at CPU resources nang hindi
+      // ginagalaw ang DOM visibility ng canvas.
       const atContent = this.scrollProgress >= 1.0;
       const flightSettled = Math.abs(this.smoothProgress - this.scrollProgress) < 0.001;
 
       if ((atContent && flightSettled) || this.forcePaused) {
-        if (this.isRenderingActive) {
-          this.isRenderingActive = false;
-          if (this.canvas) this.canvas.style.visibility = 'hidden';
-        }
+        this.isRenderingActive = false;
         return;
       }
 
       if (!this.isRenderingActive && !this.forcePaused) {
         this.isRenderingActive = true;
-        if (this.canvas) this.canvas.style.visibility = '';
         this.clock.getDelta();
       }
 
-      const delta = this.clock.getDelta();
+      const delta = Math.min(this.clock.getDelta(), 0.1);
       const elapsed = this.clock.getElapsedTime();
+
+      // Dynamic Resolution Adaptation: kung mababa ang FPS (< 45 fps), bawasan ang pixel ratio
+      if (this.fpsMonitorEnabled) {
+        this.frameCount++;
+        this.frameTimeAccum += delta;
+        if (this.frameCount >= 60) {
+          const avgDelta = this.frameTimeAccum / this.frameCount;
+          if (avgDelta > 0.022 && this.currentPixelRatio > 0.9) {
+            this.currentPixelRatio = Math.max(0.85, this.currentPixelRatio - 0.15);
+            this.renderer.setPixelRatio(this.currentPixelRatio);
+          }
+          this.frameCount = 0;
+          this.frameTimeAccum = 0;
+        }
+      }
 
       this.smoothProgress = THREE.MathUtils.damp(this.smoothProgress, this.scrollProgress, 10, delta);
 
       // Camera flight
       this.camera.position.lerpVectors(this.flight.startPos, this.flight.endPos, this.smoothProgress);
       this.camera.quaternion.slerpQuaternions(this.flight.startQuat, this.flight.endQuat, this.smoothProgress);
-      this.camera.position.x += this.mouse.x * 0.25;
-      this.camera.position.y += this.mouse.y * 0.15;
+
+      if (!this.tier.isTouch) {
+        this.camera.position.x += this.mouse.x * 0.25;
+        this.camera.position.y += this.mouse.y * 0.15;
+      }
 
       // Ang centerpiece ay nananatiling nakatigil.
       if (this.centerpiece === 'logo' && this.emblem) {
@@ -622,39 +714,9 @@ export class HimayaScene {
   }
 
   updateWaves(elapsed) {
-    const tilt = new THREE.Vector3();
-
-    this.waveTargets.forEach(({ uniforms, bMin, bMax, wave }) => {
-      uniforms.uTime.value = elapsed;
-      uniforms.uSpeed.value = wave.speed;
-      uniforms.uCount.value = wave.count;
-      uniforms.uWidth.value = wave.width;
-      uniforms.uBaseOpacity.value = wave.baseOpacity;
-      uniforms.uOpacityBoost.value = wave.opacityBoost;
-      uniforms.uBaseGlow.value = wave.baseGlow;
-      uniforms.uGlowBoost.value = wave.glowBoost;
-      uniforms.uSoftness.value = wave.softness;
-
-      tilt.set(wave.tiltX, 1, wave.tiltZ).normalize();
-      uniforms.uDirection.value.copy(tilt);
-
-      const near = new THREE.Vector3(
-        tilt.x >= 0 ? bMin.x : bMax.x,
-        tilt.y >= 0 ? bMin.y : bMax.y,
-        tilt.z >= 0 ? bMin.z : bMax.z,
-      );
-      const far = new THREE.Vector3(
-        tilt.x >= 0 ? bMax.x : bMin.x,
-        tilt.y >= 0 ? bMax.y : bMin.y,
-        tilt.z >= 0 ? bMax.z : bMin.z,
-      );
-
-      uniforms.uSpan.value = Math.max(
-        far.x * tilt.x + far.y * tilt.y + far.z * tilt.z - (near.x * tilt.x + near.y * tilt.y + near.z * tilt.z),
-        0.001,
-      );
-      uniforms.uMin.value.copy(near);
-    });
+    for (let i = 0; i < this.waveTargets.length; i++) {
+      this.waveTargets[i].uniforms.uTime.value = elapsed;
+    }
   }
 
   // ---------------------------------------------------------------- teardown

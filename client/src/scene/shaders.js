@@ -1,6 +1,6 @@
 /**
  * Scanline wave shaders para sa wireframe overlay ng terrain at libro.
- * Lingkod sa dating galing sa Ink.ai bundle — hindi binago ang formula.
+ * Optimized para sa mobile GPUs (low ALU operations, mediump precision, zero redundant math).
  */
 export const wireVertexShader = /* glsl */ `
   varying vec3 vPos;
@@ -11,6 +11,7 @@ export const wireVertexShader = /* glsl */ `
 `;
 
 export const wireFragmentShader = /* glsl */ `
+  precision mediump float;
   uniform vec3 uColor;
   uniform float uTime;
   uniform vec3 uDirection;
@@ -28,15 +29,16 @@ export const wireFragmentShader = /* glsl */ `
 
   void main() {
     float span = max(uSpan, 1e-4);
-    vec3 dir = normalize(uDirection);
+    vec3 dir = uDirection;
     float pos = dot(vPos - uMin, dir) / span;
     pos = fract(pos);
     float phase = pos * uCount - uTime * uSpeed;
     float tri = 1.0 - abs(fract(phase) * 2.0 - 1.0);
     float width = clamp(uWidth, 0.02, 0.6);
     float dist = (1.0 - tri) / width;
-    float stripe = exp(-dist * dist);
-    float pulse = pow(stripe, max(uSoftness, 1e-4));
+    // Pinasimple ang exp(-dist*dist)^softness tungo sa exp(-dist*dist*softness)
+    // para maalis ang mabigat na pow() sa fragment shader ng mobile GPU
+    float pulse = exp(-dist * dist * max(uSoftness, 1e-4));
     float opacity = clamp(uBaseOpacity + uOpacityBoost * pulse, 0.0, 1.0);
     float glow = clamp(uBaseGlow + uGlowBoost * pulse, 0.0, 3.0);
     gl_FragColor = vec4(uColor * glow, opacity);

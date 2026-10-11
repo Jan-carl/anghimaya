@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "description": "Ang Himaya — PUP Lopez Campus Student Publication (React front-end + Node API)",
+  "workspaces": [
+    "client"
+  ],
   "scripts": {
-    "install:all": "npm install && npm --prefix client install && npm --prefix server install",
+    "install:all": "npm install && npm --prefix server install",
     "dev": "npm --prefix client run dev",
     "dev:api": "npm --prefix server run dev",
     "build": "npm --prefix client run build",

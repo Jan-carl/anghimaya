@@ -31,6 +31,21 @@ export function ArticleReader({ article, onClose }) {
   const [copied, setCopied] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isClosing, setIsClosing] = useState(false);
+  const closingTimerRef = useRef(null);
+
+  const handleClose = () => {
+    if (isClosing) return;
+    setIsClosing(true);
+    if (isPlayingRef.current) {
+      window.speechSynthesis?.cancel();
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+    }
+    closingTimerRef.current = setTimeout(() => {
+      onClose();
+    }, 300);
+  };
 
 
   // Tagalog TTS Voices State
@@ -118,14 +133,17 @@ export function ArticleReader({ article, onClose }) {
     };
   }, [fontSize, article]);
 
-  // Keyboard escape listener to close reader
+  // Keyboard escape listener to close reader with smooth blur fade exit
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (closingTimerRef.current) clearTimeout(closingTimerRef.current);
+    };
+  }, [isClosing]);
 
   // Voice detection and asynchronous listener (SpeechSynthesis voiceschanged)
   useEffect(() => {
@@ -368,7 +386,7 @@ export function ArticleReader({ article, onClose }) {
     <div
       ref={overlayRef}
       onScroll={handleOverlayScroll}
-      className="tfm-reader-overlay"
+      className={`tfm-reader-overlay ${isClosing ? 'tfm-reader-overlay--closing' : ''}`.trim()}
       role="dialog"
       aria-modal="true"
       aria-label={article.title}
@@ -392,7 +410,7 @@ export function ArticleReader({ article, onClose }) {
             <button
               type="button"
               className="tfm-reader-close-btn"
-              onClick={onClose}
+              onClick={handleClose}
               aria-label="Isara ang artikulo"
               title="Isara (Esc)"
             >
@@ -564,15 +582,17 @@ export function ArticleReader({ article, onClose }) {
               <div className="tfm-editorial-seal">
                 <img src="/anghimayalogo.png" alt="Ang Himaya Sagisag" />
                 <div>
-                                    <strong>Ang Himaya</strong>
+                  <strong>Ang Himaya</strong>
                   <span>Pluma ng Katotohanan, Haligi ng Katapatan</span>
                 </div>
               </div>
             </div>
           </article>
+        </div>
+      </div>
 
-          {/* FLOATING READER DOCK (CLEAN, NO THEME SWITCHERS) */}
-          <aside className="tfm-reader-dock" aria-label="Reading Controls">
+      {/* FLOATING READER DOCK (ALWAYS ANCHORED AT THE BOTTOM) */}
+      <aside className="tfm-reader-dock" aria-label="Reading Controls">
 
 
             {/* Bookmark button with reading progress ring */}
@@ -691,8 +711,6 @@ export function ArticleReader({ article, onClose }) {
               ) : null}
             </div>
           </aside>
-        </div>
-      </div>
     </div>
   );
 }

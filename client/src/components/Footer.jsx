@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { scrollToTarget } from '../scene/scroll.js';
+import { Reveal } from './Reveal.jsx';
 
 const SECTIONS = [
   { id: 'top-story', label: 'Pangunahing Balita' },
@@ -21,7 +22,7 @@ export function Footer() {
 
   return (
     <footer className="tfm-footer">
-      <div className="container tfm-footer__inner">
+      <Reveal as="div" className="container tfm-footer__inner">
         <div className="tfm-footer__grid">
           {/* KOLUM 1: PUBLIKASYON AT IMPORMASYON */}
           <div className="tfm-footer__brand-col">
@@ -127,7 +128,7 @@ export function Footer() {
             Pluma ng Katotohanan · Haligi ng Katapatan · Kasama ng Sambayanan
           </span>
         </div>
-      </div>
+      </Reveal>
 
       {/* FLOATING BACK TO TOP BUTTON */}
       <button
