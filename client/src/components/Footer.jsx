@@ -122,7 +122,7 @@ export function Footer() {
               © {new Date().getFullYear()} <strong>Ang Himaya</strong>. Lahat ng karapatan ay nakalaan.
             </span>
             <span className="tfm-footer__bottom-sep">·</span>
-            <span>PUP Lopez Campus</span>
+            <span>PUP Lopez Kampus</span>
           </div>
           <span className="tfm-footer__motto">
             Pluma ng Katotohanan · Haligi ng Katapatan · Kasama ng Sambayanan

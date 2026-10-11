@@ -189,7 +189,7 @@ export function NavBar({ articles = [], onSelectArticle }) {
           <img src="/anghimayalogo.png" alt="" aria-hidden="true" />
           <span className="nav__brand-text">
             <span className="nav__brand-name">Ang Himaya</span>
-            <span className="nav__brand-tag">PUP Lopez Campus</span>
+            <span className="nav__brand-tag">PUP Lopez Kampus</span>
           </span>
         </a>
 
@@ -235,7 +235,7 @@ export function NavBar({ articles = [], onSelectArticle }) {
               Mag-subscribe sa Ang Himaya <span aria-hidden="true">→</span>
             </button>
             <p className="nav__mobile-tagline">
-              Opisyal na Pamahayagang Mag-aaral ng PUP Lopez Campus
+              Opisyal na Pamahayagang Mag-aaral ng PUP Lopez Kampus
             </p>
           </div>
         </div>

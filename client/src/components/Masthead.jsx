@@ -3,7 +3,7 @@ import { SectionHead } from './ui.jsx';
 
 /**
  * Tanggapan ng Patnugutan: Ang Himaya Publication Charter & Institutional Identity
- * Official Student Campus Publication of the Polytechnic University of the Philippines – Lopez Campus
+ * Opisyal na Pamahayagang Mag-aaral ng Politeknikong Unibersidad ng Pilipinas – Kampus ng Lopez
  * “Pluma ng Katotohanan, Haligi ng Katapatan”
  */
 export function Masthead() {
@@ -17,7 +17,7 @@ export function Masthead() {
           />
         </Reveal>
 
-        {/* OPISYAL NA CHARTER AT KASAYSAYAN NG PUBLIKASYON (BROADSHEET EDITORIAL SHEET) */}
+        {/* OPISYAL NA KASUNDAAN AT KASAYSAYAN NG PUBLIKASYON (BROADSHEET EDITORIAL SHEET) */}
         <Reveal as="article" className="tfm-charter-sheet">
           {/* MASTHEAD NAMEPLATE */}
           <header className="tfm-charter-nameplate">
@@ -35,7 +35,7 @@ export function Masthead() {
               ANG HIMAYA PUBLICATION
             </h2>
             <p className="tfm-charter-nameplate__sub">
-              Official Student Campus Publication of the Polytechnic University of the Philippines – Lopez Campus
+              Opisyal na Pamahayagang Mag-aaral ng Politeknikong Unibersidad ng Pilipinas – Kampus ng Lopez
             </p>
             <div className="tfm-charter-nameplate__motto-bar">
               <span className="tfm-charter-nameplate__motto">
@@ -44,95 +44,95 @@ export function Masthead() {
             </div>
           </header>
 
-          {/* EDITORIAL COLUMNS: ABOUT, NAME, TAGLINE vs. VISION & MISSION */}
+          {/* EDITORIAL COLUMNS: ABOUT, NAME, TAGLINE vs. PANGARAP & MISYON */}
           <div className="tfm-charter-grid">
             {/* COLUMN 1: ABOUT & IDENTITY */}
             <div className="tfm-charter-col">
               <section className="tfm-charter-section">
-                <h3 className="tfm-charter-section__title">ABOUT ANG HIMAYA</h3>
+                <h3 className="tfm-charter-section__title">TUNGKOL SA ANG HIMAYA</h3>
                 <div className="tfm-charter-prose">
                   <p>
-                    <strong>Ang Himaya Publication</strong> is the official student campus publication of the Polytechnic University of the Philippines – Lopez Campus.
+                    Ang <strong>Ang Himaya Publication</strong> ay ang opisyal na pamahayagang mag-aaral ng Politeknikong Unibersidad ng Pilipinas – Kampus ng Lopez.
                   </p>
                   <p>
-                    Guided by the principles of truth, integrity, editorial independence, and responsible journalism, Ang Himaya serves as a platform for informing and engaging the University community through news, features, opinions, literary works, multimedia content, and other forms of campus journalism.
+                    Batay sa mga tuntunin ng katotohanan, katapatan, kalayaan sa editoryal, at responsableng pamamahayagan, ang Ang Himaya ay naglilingkod bilang isang plataporma para sa pagpapalaganap ng impormasyon at pagpakikilahok ng komunidad ng Unibersidad sa pamamagitan ng balita, artikulo, opinyon, panitikan, multinedyong nilalaman, at iba pang anyo ng pamamahayagang mag-aaral.
                   </p>
                   <p>
-                    The Publication seeks not only to document the events and experiences of the PUP Lopez community but also to cultivate student journalists who are competent, principled, critical, and socially responsible.
+                    Hindi lamang nagtatalo ang Pambansang ito sa mga pangyayari at karanasan ng komunidad ng PUP Lopez, kundi nagtatayo rin ito ng mga mag-aaral na may kakayahan, may prinsipyo, kritikal, at pananagutang panlahat sa lipunan.
                   </p>
                 </div>
               </section>
 
               <section className="tfm-charter-section">
-                <h3 className="tfm-charter-section__title">OUR NAME</h3>
+                <h3 className="tfm-charter-section__title">ANG AMING PAGPAPALAGYAN</h3>
                 <div className="tfm-charter-prose">
                   <p>
-                    The name <em>“Ang Himaya”</em> is derived from the Filipino word <strong>“himaya,”</strong> which signifies glory, honor, excellence, and distinction.
+                    Ang aming pagpapalagyan ay nagmula sa salitang Filipino na <strong>“himaya,”</strong> na nangangahulugang kaluya, karangalan, kahusayan, at pagtatangi.
                   </p>
                   <p>
-                    The name reflects the Publication's aspiration to uphold truth, integrity, and excellence in campus journalism while bringing honor to the Polytechnic University of the Philippines – Lopez Campus through responsible, ethical, and independent journalism.
+                    Ipinapakita ng pagpapalagyang ito ang hangarin ng Pambansang ito na itaas ang katotohanan, katapatan, at kahusayan sa pamamahayagang mag-aaral, habang nagdala ng karangalan sa Politeknikong Unibersidad ng Pilipinas – Kampus ng Lopez sa pamamagitan ng responsable, etikal, at malayang pamamahayagan.
                   </p>
                 </div>
               </section>
 
               <section className="tfm-charter-section">
-                <h3 className="tfm-charter-section__title">OUR TAGLINE</h3>
+                <h3 className="tfm-charter-section__title">ANG AMING TAGLINE</h3>
                 <div className="tfm-charter-tagline-box">
                   <h4 className="tfm-charter-tagline-box__heading">
                     “PLUMA NG KATOTOHANAN, HALIGI NG KATAPATAN”
                   </h4>
                   <p>
-                    The official tagline of Ang Himaya Publication embodies its commitment to truth, integrity, ethical journalism, and responsible service to the University community.
+                    Ang opisyal na tagline ng Ang Himaya ay naglalaman ng katapatan nito sa katotohanan, katapatagan ng loob, etikal na pamamahayagan, at responsableng paglilingkod sa komunidad ng Unibersidad.
                   </p>
                   <p>
-                    The <strong>pluma</strong> represents the journalist's responsibility to write, document, and speak truthfully.
+                    Ang <strong>pluma</strong> ay kumakatawan sa responsibilidad ng mamamahayag na sumulat, magtala, at magsalita nang may katapatan.
                   </p>
                   <p>
-                    The <strong>haligi</strong> represents the Publication's role as a steadfast institution that upholds <em>katapatan</em>—honesty, integrity, and faithfulness to its journalistic principles.
+                    Ang <strong>haligi</strong> ay kumakatawan sa tungkulin ng Pambansang ito bilang matatag na institusyon na nagtatangguyod ng <em>katapatan</em>—kawalan ng pansinlang, katapatagan ng loob, at pagkakatapat sa sariling prinsipyo sa pamamahayagan.
                   </p>
                   <p className="tfm-charter-prose__emphasis">
-                    Together, the tagline reflects Ang Himaya's commitment to being a publication that does not merely tell stories, but carries the responsibility that comes with telling them.
+                    Sa kabuuan, pinapakita ng tagline na ito ang katapatan ng Ang Himaya bilang isang pamahayagan na hindi lamang nagsasalaysay ng mga kuwento, kundi may tinataglay na responsibilidad na kasama ng pagkakasaysay.
                   </p>
                 </div>
               </section>
             </div>
 
-            {/* COLUMN 2: VISION & MISSION */}
+            {/* COLUMN 2: PANGARAP & MISYON */}
             <div className="tfm-charter-col">
               <section className="tfm-charter-section tfm-charter-section--highlight">
-                <h3 className="tfm-charter-section__title">VISION</h3>
+                <h3 className="tfm-charter-section__title">PANGARAP</h3>
                 <div className="tfm-charter-prose">
                   <p className="tfm-charter-lead">
-                    Ang Himaya Publication envisions itself as a credible, progressive, and competitive campus publication recognized for excellence in responsible journalism, impactful storytelling, and the fearless pursuit of truth.
+                    Ang Ang Himaya Publication ay naghahain na maging isang pamahayagang mag-aaral sa kampus na may kredibilidad, progresibo, at makikipantayan sa kumpetisyon; kinikilala sa kahusayan sa responsableng pamamahayagan, sa makabuluhang pagkukwento, at sa matapang na pagtataguyod ng katotohanan.
                   </p>
                   <p>
-                    It aspires to transcend the boundaries of the University by producing principled and competent student journalists who contribute meaningfully to public discourse, uphold democratic values, and serve society through ethical and independent journalism.
+                    Naghahain itong lampas sa hangganan ng Unibersidad sa pamamagitan ng paggawa ng mga mag-aaral na mamumuno at may kakayahan, na nag-aambag nang makabuluhan sa usaping pampubliko, nagtatangguyod ng mga halagang demokratiko, at naglilingkod sa lipunan sa pamamagitan ng etikal at malayang pamamahayagan.
                   </p>
                 </div>
               </section>
 
               <section className="tfm-charter-section tfm-charter-section--highlight">
-                <h3 className="tfm-charter-section__title">MISSION</h3>
+                <h3 className="tfm-charter-section__title">MISYON</h3>
                 <div className="tfm-charter-prose">
                   <p>
-                    Ang Himaya Publication is committed to producing accurate, fair, ethical, and responsible journalism that informs, educates, and empowers the PUP Lopez Campus community and the public.
+                    Ang Ang Himaya Publication ay nakatalaga sa paggawa ng tapat, walang kinikilingan, etikal, at responsableng pamamahayagan na nagpapaalam, nagtuturo, at nagpapalakas sa komunidad ng PUP Lopez Kampus at sa publiko.
                   </p>
                   <p>
-                    It shall provide a credible platform for the free exchange of ideas, promote critical inquiry and meaningful discourse, uphold truth, accountability, and editorial independence, and cultivate competent, principled, and socially responsible student journalists.
+                    Magbibigay ito ng mapanatag na plataporma para sa malayang palitan ng ideya, susulong sa makatotohanang pagsusuri at makabuluhang usapan, magtatangguyod ng katotohanan, pananagutan, at kalayaan sa editoryal, at magpapalago ng mga mag-aaral na may prinsipyo at pananagutang panlahat sa lipunan.
                   </p>
                   <p>
-                    The Publication shall actively participate in press conferences, journalism competitions, research initiatives, media collaborations, community engagement, and other professional and academic platforms to strengthen the competence of its members and promote the excellence of PUP Lopez Campus.
+                    Aktibong makikipagtulungan ang Pambansang ito sa mga dyaryo, timpok ng pamamahayagan, inisyatibong pananaliksik, pakikipagtulungan sa midya, pakikilahok sa komunidad, at iba pang platapormang propesyonal at akademiko, upang lakasin ang kakayahan ng kaniyang mga kasapi at ipagpromote ang kahusayan ng PUP Lopez Kampus.
                   </p>
                 </div>
               </section>
             </div>
           </div>
 
-          {/* FULL-WIDTH BROADSHEET CHRONICLE: OUR HISTORY */}
+          {/* FULL-WIDTH BROADSHEET CHRONICLE: KASAYSAYAN */}
           <section className="tfm-charter-history">
             <div className="tfm-charter-history__header">
               <span className="tfm-charter-history__eyebrow">KASAYSAYAN NG PAMAHAYAGANG MAG-AARAL</span>
-              <h3 className="tfm-charter-history__title">OUR HISTORY</h3>
+              <h3 className="tfm-charter-history__title">ANG AMING KASAYSAYAN</h3>
               <p className="tfm-charter-history__sub">
                 Mula sa Pamana ng Epitome Hanggang sa Pagkakatatag at Paglago ng Ang Himaya
               </p>
@@ -141,55 +141,43 @@ export function Masthead() {
             <div className="tfm-charter-history__body">
               <div className="tfm-charter-history__col">
                 <p>
-                  The story of Ang Himaya Publication begins with the changing landscape of campus journalism at PUP Lopez Campus.
+                  Nagsisimula ang kuwento ng Ang Himaya Publication sa pagbabago ng tanawing panoraw ng pamamahayagang mag-aaral sa PUP Lopez Kampus.
                 </p>
                 <p>
-                  Before Ang Himaya, the University community was served by <strong>Epitome</strong>, a student publication that existed for approximately 22 years ago. During its later years, Epitome became increasingly associated with student activism and critical campus discourse. Its eventual discontinuation created a significant gap in the campus press, resulting in a long period without a formally established student publication.
+                  Bago pa dumating ang Ang Himaya, hinubog ng komunidad ng Unibersidad ang <strong>Epitome</strong>, isang pamahayagang mag-aaral na umibra ng mga 22 taon na ang nakalipas. Sa mga huling taon nito, naging kaugnay ng Epitome ang aktibismo ng mga mag-aaral at ang matinding diskusyon sa kampus. Ang pagkawala nito ay nagdulot ng malaking puwang sa campus press, na nagresulta sa mahabang panahon na walang itinatag na pamahayagang mag-aaral.
                 </p>
                 <p>
-                  This period marked a transition in the history of campus journalism at PUP Lopez. The absence of a publication meant that it would take several years before a new student press would emerge to once again provide a platform for campus news, student perspectives, and critical discourse.
+                  Ipinakita ng panahong ito ang pagbabago sa kasaysayan ng pamamahayagang mag-aaral sa PUP Lopez. Dahil walang pamahayagan, ilang taon ang dapat daanan bago lumitaw ang bagong student press na muling magbibigay ng plataporma para sa balita ng kampus, mga pananaw ng mag-aaral, at matinding diskusyon.
                 </p>
               </div>
 
               <div className="tfm-charter-history__col">
                 <p>
-                  In <strong>Academic Year 2024–2025</strong>, Ang Himaya Publication was established as a new chapter in the University's campus journalism tradition.
+                  Sa <strong>Akademikong Taon 2024–2025</strong>, itinatag ang Ang Himaya Publication bilang bagong kabanata sa tradisyon ng pamamahayagang mag-aaral ng Unibersidad.
                 </p>
                 <p>
-                  Starting with only <strong>10 members</strong>, Ang Himaya began its work as the official student campus publication of the Polytechnic University of the Philippines – Lopez Campus. While it inherited the broader tradition of campus journalism, Ang Himaya established its own identity, principles, and organizational foundation.
+                  Nagsimula sa <strong>10 kasapi</strong>, nagsimulang magtrabaho ang Ang Himaya bilang opisyal na pamahayagang mag-aaral ng Politeknikong Unibersidad ng Pilipinas – Kampus ng Lopez. Bagama't nagmana ito sa mas malawak na tradisyon ng pamamahayagang mag-aaral, nagtatag ito ng sarili nitong pagkakakilanlan, prinsipyo, at pundasyong organisasyonal.
                 </p>
                 <p>
-                  In the succeeding academic years, the Publication continued to grow. Its membership expanded, its coverage developed, and its participation in journalism and University activities increased.
+                  Sa mga sumunod na akademikong taon, patuloy na lumago ang Pambansang ito. Lumaki ang bilang ng kasapi, lumawak ang saklaw, at dumagdag ang pakikilahok nito sa pamamahayagan at sa mga gawain ng Unibersidad.
                 </p>
                 <p>
-                  By <strong>Academic Year 2026–2027</strong>, Ang Himaya had grown to approximately <strong>40 members</strong>—a significant expansion from its original 10-member team.
+                  Sa <strong>Akademikong Taon 2026–2027</strong>, umabot sa mga <strong>40 kasapi</strong> ang Ang Himaya—isang makabuluhang paglago mula sa orihinal nitong sampung kasapi.
                 </p>
               </div>
             </div>
 
             <div className="tfm-charter-history__credo">
               <p>
-                Today, Ang Himaya continues to build its own institutional history while recognizing the place of Epitome in the earlier tradition of campus journalism at PUP Lopez. The Publication carries forward the fundamental role of the campus press: to inform, to question, to document, and to serve the University community through responsible and independent journalism.
+                Ngayon, patuloy na binubuo ng Ang Himaya ang sarili nitong kasaysayang institusyonal, habang kinikilala ang lugar ng Epitome sa naunang tradisyon ng pamamahayagang mag-aaral sa PUP Lopez. Ipinapakita ng Pambansang ito ang pangunahing tungkulin ng campus press: magpaalam, magtanong, magtala, at maglingkod sa komunidad ng Unibersidad sa pamamagitan ng responsableng at malayang pamamahayagan.
               </p>
               <blockquote className="tfm-charter-history__quote">
-                “From the legacy of the past to the voices of a new generation, Ang Himaya continues to write the next chapter of campus journalism at PUP Lopez.”
+                “Mula sa pamana ng nakaraan patungo sa boses ng bagong henerasyon, patuloy na isinusulat ng Ang Himaya ang susunod na kabanata ng pamamahayagang mag-aaral sa PUP Lopez.”
               </blockquote>
             </div>
           </section>
 
-          {/* OFFICIAL CEGP SEAL & ACCREDITATION FOOTER */}
-          <footer className="tfm-charter-footer">
-            <div className="tfm-charter-footer__seal">
-              <img src="/anghimayalogo.png" alt="" aria-hidden="true" />
-              <div>
-                <strong>Opisyal na Pagkilala at Pederasyon</strong>
-                <span>
-                  Ang Himaya ay lehitimong kasapi ng <strong>College Editors Guild of the Philippines (CEGP)</strong>, ang pinakamatanda at pinakamalawak na pambansang alyansa ng mga pahayagang mag-aaral sa Asya-Pasipiko.
-                </span>
-              </div>
-            </div>
-          </footer>
-        </Reveal>
+          </Reveal>
       </div>
     </section>
   );
