@@ -12,7 +12,7 @@ import {
  * manatiling naka-block sa content. Kung tumatagal ang 3D scene,
  * ipinapakita na rin ang pahayagan.
  */
-const PRELOADER_TIMEOUT_MS = 6000;
+const PRELOADER_TIMEOUT_MS = 10000;
 
 /**
  * Pinakamaikling oras na nakikita ang bar. Kung mabilis ang mga lokal na

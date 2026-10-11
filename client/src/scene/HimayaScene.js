@@ -115,8 +115,7 @@ export class HimayaScene {
       canvas: this.canvas,
       antialias: this.tier.antialias,
       alpha: true,
-      powerPreference: 'high-performance',
-      precision: this.tier.isMobile ? 'mediump' : 'highp',
+      powerPreference: this.tier.isMobile ? 'default' : 'high-performance',
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(this.currentPixelRatio);
@@ -573,10 +572,23 @@ export class HimayaScene {
   // --------------------------------------------------------- scroll + events
 
   initSmoothScroll() {
-    // Para sa mga touch/mobile device, i-off ang syncTouch upang hindi ma-hijack
-    // ang native GPU composited touch scrolling ng browser, na siyang nagdudulot ng lag.
+    // Sa touch at mobile devices, gamitin ang 100% native GPU-composited scrolling ng browser.
+    // Huwag mag-instantiate ng Lenis dahil nag-a-attach ito ng non-passive touchmove listeners
+    // na nagka-call ng event.preventDefault() kapag naka-pause o nag-navigate pabalik,
+    // na siyang nagdudulot ng touch freezing / locking pagkatapos basahin ang artikulo.
+    if (this.tier.isTouch || this.tier.isMobile) {
+      this.lenis = null;
+      const onNativeScroll = () => {
+        const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+        this.handleScroll({ scroll: scrollY });
+      };
+      window.addEventListener('scroll', onNativeScroll, { passive: true });
+      this.disposers.push(() => window.removeEventListener('scroll', onNativeScroll));
+      return;
+    }
+
     this.lenis = new Lenis({
-      lerp: this.tier.isTouch ? 0.12 : 0.1,
+      lerp: 0.1,
       smoothWheel: true,
       syncTouch: false,
     });

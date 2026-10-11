@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { initials, tagalogMonthYear } from '../lib/format.js';
 import { pauseLenis, resumeLenis, pause3D, resume3D } from '../scene/scroll.js';
 import {
@@ -32,20 +32,26 @@ export function ArticleReader({ article, onClose }) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isClosing, setIsClosing] = useState(false);
+  const isClosingRef = useRef(false);
   const closingTimerRef = useRef(null);
 
-  const handleClose = () => {
-    if (isClosing) return;
+  const handleClose = useCallback((options) => {
+    if (isClosingRef.current) return;
+    isClosingRef.current = true;
     setIsClosing(true);
     if (isPlayingRef.current) {
       window.speechSynthesis?.cancel();
       isPlayingRef.current = false;
       setIsPlaying(false);
     }
+    const fromPopState = options === true;
     closingTimerRef.current = setTimeout(() => {
+      if (!fromPopState && window.history.state?.himayaReader) {
+        window.history.back();
+      }
       onClose();
     }, 300);
-  };
+  }, [onClose]);
 
 
   // Tagalog TTS Voices State
@@ -143,7 +149,25 @@ export function ArticleReader({ article, onClose }) {
       window.removeEventListener('keydown', handleKeyDown);
       if (closingTimerRef.current) clearTimeout(closingTimerRef.current);
     };
-  }, [isClosing]);
+  }, [handleClose]);
+
+  // Mobile hardware/gesture back navigation via popstate
+  useEffect(() => {
+    try {
+      window.history.pushState({ himayaReader: true }, '', window.location.pathname + '#artikulo');
+    } catch {
+      // ignore
+    }
+
+    const handlePopState = () => {
+      handleClose(true);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [handleClose]);
 
   // Voice detection and asynchronous listener (SpeechSynthesis voiceschanged)
   useEffect(() => {
@@ -180,13 +204,26 @@ export function ArticleReader({ article, onClose }) {
 
   // Lock body scroll & pause Lenis and 3D rendering when reading; unlock on unmount
   useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     pauseLenis();
     pause3D();
 
     return () => {
-      document.body.style.overflow = originalOverflow;
+      if (prevBodyOverflow) {
+        document.body.style.overflow = prevBodyOverflow;
+      } else {
+        document.body.style.removeProperty('overflow');
+      }
+      if (prevHtmlOverflow) {
+        document.documentElement.style.overflow = prevHtmlOverflow;
+      } else {
+        document.documentElement.style.removeProperty('overflow');
+      }
+
       resumeLenis();
       resume3D();
       isPlayingRef.current = false;
@@ -585,6 +622,20 @@ export function ArticleReader({ article, onClose }) {
                   <strong>Ang Himaya</strong>
                   <span>Pluma ng Katotohanan, Haligi ng Katapatan</span>
                 </div>
+              </div>
+
+              <div className="tfm-reader-footer-actions">
+                <button
+                  type="button"
+                  className="tfm-reader-footer-back-btn"
+                  onClick={handleClose}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg>
+                  Bumalik sa Pahayagan
+                </button>
               </div>
             </div>
           </article>

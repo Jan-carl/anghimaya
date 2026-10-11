@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useContent } from './hooks/useContent.js';
 import { SceneHero } from './scene/SceneHero.jsx';
 import { SceneErrorBoundary } from './scene/SceneErrorBoundary.jsx';
@@ -20,6 +20,18 @@ import { ArticleReader } from './components/ArticleReader.jsx';
 export function App() {
   const content = useContent();
   const [readingArticle, setReadingArticle] = useState(null);
+
+  // Linisin ang scroll state kapag bumabalik ang browser mula sa bfcache (back/forward cache)
+  useEffect(() => {
+    const handlePageShow = (e) => {
+      if (e.persisted) {
+        document.body.style.removeProperty('overflow');
+        document.documentElement.style.removeProperty('overflow');
+      }
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
 
   return (
     <>

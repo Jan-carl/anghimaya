@@ -81,19 +81,18 @@ export function NavBar({ articles = [], onSelectArticle }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Kapag bukas ang menu, ihinto ang background smooth scroll nang hindi
-  // ginagalaw ang body.style.overflow (upang hindi masira ang sticky/fixed positioning)
+  // Kapag bukas ang menu, ihinto ang background smooth scroll nang malinis
   useEffect(() => {
     if (menuOpen) {
       pauseLenis();
-      const preventBgTouch = (e) => {
-        if (!navLinksRef.current?.contains(e.target)) {
-          e.preventDefault();
-        }
-      };
-      document.addEventListener('touchmove', preventBgTouch, { passive: false });
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
       return () => {
-        document.removeEventListener('touchmove', preventBgTouch);
+        if (prevOverflow) {
+          document.body.style.overflow = prevOverflow;
+        } else {
+          document.body.style.removeProperty('overflow');
+        }
         resumeLenis();
       };
     }
@@ -166,6 +165,7 @@ export function NavBar({ articles = [], onSelectArticle }) {
 
   const pickResult = (article) => {
     setQuery('');
+    setMenuOpen(false);
     if (onSelectArticle) {
       onSelectArticle(article);
     } else {

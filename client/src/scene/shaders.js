@@ -11,7 +11,6 @@ export const wireVertexShader = /* glsl */ `
 `;
 
 export const wireFragmentShader = /* glsl */ `
-  precision mediump float;
   uniform vec3 uColor;
   uniform float uTime;
   uniform vec3 uDirection;
