@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { scrollToTarget } from '../scene/scroll.js';
+import { scrollToTarget, scrollToTop } from '../scene/scroll.js';
 import { Reveal } from './Reveal.jsx';
 
 const SECTIONS = [
@@ -32,7 +32,7 @@ export function Footer() {
               aria-label="Ang Himaya — Bumalik sa Itaas"
               onClick={(e) => {
                 e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                scrollToTop();
               }}
             >
               <img src="/anghimayalogo.png" alt="" className="tfm-footer__logo-img" />
@@ -63,7 +63,7 @@ export function Footer() {
                   href="#top"
                   onClick={(e) => {
                     e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    scrollToTop();
                   }}
                 >
                   Pangunahing Pahina
@@ -134,7 +134,7 @@ export function Footer() {
       <button
         type="button"
         className={`tfm-back-to-top ${showTop ? 'tfm-back-to-top--visible' : ''}`}
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onClick={scrollToTop}
         aria-label="Bumalik sa itaas"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

@@ -37,6 +37,21 @@ export function resumeLenis() {
   if (lenis) lenis.start();
 }
 
+/**
+ * Touch device (iPhone, Android). Walang Lenis sa mga ito — ginagamit ang
+ * native na scroll ng browser.
+ */
+function isTouchDevice() {
+  if (typeof window === 'undefined') return false;
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
+/**
+ * ISANG pagkilos lang bawat tawag. Ang dating code ay nagta-trigger ng dalawang
+ * sabay-sabay na smooth scroll (native + Lenis), kaya nagtatalon ang pahina sa
+ * iPhone. Sa touch device ay instant na scroll — ang native smooth scroll ng
+ * iOS ay may sariling easing na nagpapatigil-tigil habang nagscroll.
+ */
 export function scrollToTarget(target, { offset, duration = 1.0 } = {}) {
   const element = typeof target === 'string' ? document.querySelector(target) : target;
   if (!element) return;
@@ -52,7 +67,16 @@ export function scrollToTarget(target, { offset, duration = 1.0 } = {}) {
 
   const rect = element.getBoundingClientRect();
   const targetY = window.pageYOffset + rect.top + computedOffset;
-  window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+  window.scrollTo({ top: Math.max(0, targetY), behavior: isTouchDevice() ? 'auto' : 'smooth' });
+}
+
+/** Balik sa itaas. Iisang landas para sa desktop at sa mobile. */
+export function scrollToTop() {
+  if (lenis) {
+    lenis.scrollTo(0, { duration: 1.0 });
+    return;
+  }
+  window.scrollTo({ top: 0, behavior: isTouchDevice() ? 'auto' : 'smooth' });
 }
 
 /** Scroll sa ibaba ng 3D hero (sa unang seksyon ng nilalaman). */

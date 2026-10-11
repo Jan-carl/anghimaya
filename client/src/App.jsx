@@ -21,6 +21,15 @@ export function App() {
   const content = useContent();
   const [readingArticle, setReadingArticle] = useState(null);
 
+  // Tiyakin na ang pahina ay nagsisimula sa tuktok (3D hero) sa unang load kung walang hash
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (!window.location.hash || window.location.hash === '#top') {
+        window.scrollTo(0, 0);
+      }
+    }
+  }, []);
+
   // Linisin ang scroll state kapag bumabalik ang browser mula sa bfcache (back/forward cache)
   useEffect(() => {
     const handlePageShow = (e) => {
@@ -35,11 +44,13 @@ export function App() {
 
   return (
     <>
+      <div id="top" style={{ position: 'absolute', top: 0, left: 0, width: 1, height: 1, pointerEvents: 'none', opacity: 0 }} />
+
       <SceneErrorBoundary>
         <SceneHero />
       </SceneErrorBoundary>
 
-      <div className="publication" id="top">
+      <div className="publication">
         <NavBar articles={content.articles} onSelectArticle={setReadingArticle} />
 
         <main>
@@ -59,7 +70,7 @@ export function App() {
             rest={content.literary.rest}
             onSelectArticle={setReadingArticle}
           />
-          <Editions editions={content.editions} />
+          <Editions editions={[]} />
           <Masthead />
           <Subscribe />
         </main>

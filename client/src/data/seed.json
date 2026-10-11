@@ -181,5 +181,33 @@
       "created_at": "2026-10-08T08:00:00.000Z"
     }
   ],
-  "editions": []
+  "editions": [
+    {
+      "id": "ed-vol-xxiv-iss-1",
+      "title": "Ang Himaya: Tomo XXIV Blg. 1 — Tanglaw sa Bagong Yugto",
+      "volume": "Tomo XXIV, Isyu 1",
+      "theme": "Tanglaw sa Bagong Yugto",
+      "year": "2026",
+      "pages": 16,
+      "pdf_url": "#"
+    },
+    {
+      "id": "ed-vol-xxiii-iss-2",
+      "title": "Ang Himaya: Tomo XXIII Blg. 2 — Tinig ng Iskolar ng Bayan",
+      "volume": "Tomo XXIII, Isyu 2",
+      "theme": "Tinig ng Iskolar ng Bayan",
+      "year": "2025",
+      "pages": 20,
+      "pdf_url": "#"
+    },
+    {
+      "id": "ed-vol-xxiii-iss-1",
+      "title": "Ang Himaya: Tomo XXIII Blg. 1 — Pluma ng Katotohanan",
+      "volume": "Tomo XXIII, Isyu 1",
+      "theme": "Pluma ng Katotohanan",
+      "year": "2025",
+      "pages": 18,
+      "pdf_url": "#"
+    }
+  ]
 }

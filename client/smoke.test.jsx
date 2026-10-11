@@ -35,6 +35,7 @@ const renderChecks = [
   ['Kolum at Opinyon', html.includes('id="voices"')],
   ['Silakbo', html.includes('id="silakbo"')],
   ['Mga Edisyon', html.includes('id="editions"')],
+  ['Mga Edisyon: archive na walang laman', html.includes('Wala pang naitalang edisyon.')],
   ['Patnugutan', html.includes('id="masthead"')],
   ['Subscribe', html.includes('id="subscribe"')],
   ['Footer', html.includes('footer__bottom')],

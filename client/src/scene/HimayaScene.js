@@ -203,9 +203,11 @@ export class HimayaScene {
 
   initLoaders() {
     this.draco = new DRACOLoader();
-    // Opisyal na Google Draco CDN decoders: may garantisadong application/wasm MIME type,
-    // CORS access, at mabilis na edge caching para hindi mabigo ang GLTFLoader sa Vercel.
-    this.draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    if (typeof navigator !== 'undefined') {
+      this.draco.setWorkerLimit(Math.min(navigator.hardwareConcurrency || 2, 2));
+    }
+    // Gamitin ang parehong origin (/draco/gltf/) decoders na kasama sa Vercel deployment bundle
+    this.draco.setDecoderPath('/draco/gltf/');
     this.gltf = new GLTFLoader();
     this.gltf.setDRACOLoader(this.draco);
 
@@ -718,8 +720,12 @@ export class HimayaScene {
         this.book.rotation.set(rot.x, rot.y, rot.z);
       }
 
-      this.updateWaves(elapsed);
-      this.renderer.render(this.scene, this.camera);
+      try {
+        this.updateWaves(elapsed);
+        this.renderer.render(this.scene, this.camera);
+      } catch (err) {
+        console.error('[scene] frame render error:', err);
+      }
     };
 
     this.rafId = requestAnimationFrame(tick);

@@ -3,7 +3,7 @@
  * Optimized para sa mobile GPUs (low ALU operations, mediump precision, zero redundant math).
  */
 export const wireVertexShader = /* glsl */ `
-  varying vec3 vPos;
+  varying highp vec3 vPos;
   void main() {
     vPos = position;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -24,7 +24,7 @@ export const wireFragmentShader = /* glsl */ `
   uniform float uBaseGlow;
   uniform float uGlowBoost;
   uniform float uSoftness;
-  varying vec3 vPos;
+  varying highp vec3 vPos;
 
   void main() {
     float span = max(uSpan, 1e-4);
@@ -36,8 +36,9 @@ export const wireFragmentShader = /* glsl */ `
     float width = clamp(uWidth, 0.02, 0.6);
     float dist = (1.0 - tri) / width;
     // Pinasimple ang exp(-dist*dist)^softness tungo sa exp(-dist*dist*softness)
-    // para maalis ang mabigat na pow() sa fragment shader ng mobile GPU
-    float pulse = exp(-dist * dist * max(uSoftness, 1e-4));
+    // Nililimitahan sa 50.0 upang maiwasan ang half-precision overflow sa mobile GPUs
+    float d2 = min(dist * dist * max(uSoftness, 1e-4), 50.0);
+    float pulse = exp(-d2);
     float opacity = clamp(uBaseOpacity + uOpacityBoost * pulse, 0.0, 1.0);
     float glow = clamp(uBaseGlow + uGlowBoost * pulse, 0.0, 3.0);
     gl_FragColor = vec4(uColor * glow, opacity);

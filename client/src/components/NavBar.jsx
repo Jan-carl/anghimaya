@@ -151,16 +151,10 @@ export function NavBar({ articles = [], onSelectArticle }) {
   const go = (id) => {
     setMenuOpen(false);
     resumeLenis();
-    // Scroll nang direkta upang gumana agad kahit naka-pause o kakarating lang ng mobile drawer
-    setTimeout(() => {
-      const el = id === 'top' ? document.getElementById('top') : document.getElementById(id);
-      if (el) {
-        const navHeight = document.getElementById('site-nav')?.offsetHeight || 70;
-        const targetY = id === 'top' ? 0 : el.getBoundingClientRect().top + window.pageYOffset - navHeight;
-        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-      }
-      scrollToTarget(id === 'top' ? '#top' : `#${id}`);
-    }, 30);
+    // Hintayin munang makasara ang mobile drawer (kasama ang pag-aalis ng overflow
+    // lock sa body), tapos ISANG scroll lang. Ang dating dalawang sabay-sabay na
+    // smooth scroll ay nagta-talon ng pahina sa iPhone.
+    setTimeout(() => scrollToTarget(id === 'top' ? '#top' : `#${id}`), 30);
   };
 
   const pickResult = (article) => {
