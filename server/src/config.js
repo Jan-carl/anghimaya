@@ -20,7 +20,7 @@ export const config = {
   apiPrefix: '/api',
 
   // Origin ng Vite dev server (para sa CORS) — comma-separated list.
-  clientOrigins: (process.env.CLIENT_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173')
+  clientOrigins: (process.env.CLIENT_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean),
@@ -35,11 +35,30 @@ export const config = {
     store: path.join(serverRoot, 'data', 'store.json'),
     uploads: path.resolve(process.env.UPLOAD_DIR || path.join(serverRoot, 'uploads')),
     clientDist: path.resolve(process.env.CLIENT_DIST || path.join(repoRoot, 'client', 'dist')),
+    portalDist: path.resolve(process.env.PORTAL_DIST || path.join(repoRoot, 'portal', 'dist')),
   },
 
   uploads: {
     maxBytes: int(process.env.MAX_UPLOAD_BYTES, 5 * 1024 * 1024),
     allowedMime: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'],
+    // Kapag naka-set ang Cloudinary, dito napupunta ang upload. Kapag wala, lokal na disk.
+    provider: process.env.CLOUDINARY_CLOUD_NAME ? 'cloudinary' : 'local',
+  },
+
+  // Lahat ng key ay server-side lamang — huwag ilagay ang mga ito sa client/ o portal/.
+  supabase: {
+    url: process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '',
+    anonKey: process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY || '',
+    // Service-role key: lumalaktaw sa RLS ng schema.sql. Ito lang ang dapat gamitin sa server.
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || '',
+    schema: process.env.SUPABASE_SCHEMA || 'public',
+  },
+
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+    apiKey: process.env.CLOUDINARY_API_KEY || '',
+    apiSecret: process.env.CLOUDINARY_API_SECRET || '',
+    folder: process.env.CLOUDINARY_FOLDER || 'ang-himaya',
   },
 
   auth: {

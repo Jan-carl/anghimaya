@@ -24,6 +24,21 @@ router.post(
   }),
 );
 
+/** PUT /api/editions/:id */
+router.put(
+  '/:id',
+  requireAuth,
+  asyncHandler((req, res) => {
+    const patch = parseEdition(req.body, { partial: true });
+    if (!Object.keys(patch).length) throw ApiError.badRequest('Walang binagong field na ipinadala.');
+
+    const edition = store.updateEdition(req.params.id, patch);
+    if (!edition) throw ApiError.notFound('Hindi natagpuan ang edisyon.');
+
+    res.json({ data: edition });
+  }),
+);
+
 /** DELETE /api/editions/:id */
 router.delete(
   '/:id',

@@ -1,8 +1,19 @@
 import fs from 'node:fs';
 import { config } from './config.js';
 import { slugify } from './lib/validate.js';
+import {
+  COLLECTIONS,
+  fetchAll,
+  getClient,
+  isSupabaseConfigured,
+  isUuid,
+  mirrorAll,
+  newUuid,
+  supabaseStatus,
+} from './lib/supabase.js';
 
 const EMPTY = { articles: [], ticker_alerts: [], editions: [] };
+const MAX_SYNC_RETRIES = 5;
 
 function ensureDirs() {
   fs.mkdirSync(config.paths.data, { recursive: true });
@@ -27,7 +38,7 @@ function load() {
 }
 
 let writeQueued = false;
-function persist() {
+function writeLocal() {
   if (writeQueued) return;
   writeQueued = true;
   queueMicrotask(() => {
@@ -42,12 +53,117 @@ function persist() {
   });
 }
 
+const sync = { connected: false, lastSyncAt: null, lastError: null, retries: 0, syncing: false, queued: false };
+let syncTimer = null;
+
+function scheduleSync() {
+  if (!isSupabaseConfigured()) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => {
+    syncNow().catch(() => {});
+  }, 400);
+}
+
+export async function syncNow() {
+  if (!isSupabaseConfigured()) return;
+  if (sync.syncing) {
+    sync.queued = true;
+    return;
+  }
+
+  const client = await getClient();
+  if (!client) {
+    sync.connected = false;
+    return;
+  }
+
+  sync.syncing = true;
+  try {
+    await mirrorAll(client, state);
+    sync.connected = true;
+    sync.lastError = null;
+    sync.retries = 0;
+    sync.lastSyncAt = new Date().toISOString();
+  } catch (err) {
+    sync.connected = false;
+    sync.lastError = err.message;
+    sync.retries += 1;
+    console.error(`[store] Supabase sync #${sync.retries} nabigo:`, err.message);
+
+    if (sync.retries <= MAX_SYNC_RETRIES) {
+      const delay = Math.min(30_000, 1_000 * 2 ** (sync.retries - 1));
+      clearTimeout(syncTimer);
+      syncTimer = setTimeout(() => {
+        syncNow().catch(() => {});
+      }, delay);
+    }
+  } finally {
+    sync.syncing = false;
+    if (sync.queued) {
+      sync.queued = false;
+      scheduleSync();
+    }
+  }
+}
+
+export function syncStatus() {
+  return {
+    ...supabaseStatus(),
+    connected: sync.connected,
+    syncing: sync.syncing,
+    lastSyncAt: sync.lastSyncAt,
+    lastError: sync.lastError,
+  };
+}
+
+async function hydrate() {
+  if (!isSupabaseConfigured()) return;
+
+  const client = await getClient();
+  if (!client) return;
+
+  try {
+    const remote = await fetchAll(client);
+    let seeded = false;
+
+    for (const collection of COLLECTIONS) {
+      if (remote[collection]?.length) {
+        state[collection] = remote[collection];
+        continue;
+      }
+      if (!state[collection]?.length) continue;
+
+      for (const record of state[collection]) {
+        if (isUuid(record.id)) continue;
+        record.id = newUuid();
+      }
+      seeded = true;
+    }
+
+    writeLocal();
+    if (seeded) await syncNow();
+    console.log(`[store] Supabase ang pinagkukunan — sin synced ang ${COLLECTIONS.length} na talaan.`);
+  } catch (err) {
+    sync.connected = false;
+    sync.lastError = err.message;
+    console.error('[store] Hindi mabuksan ang Supabase — lokal na JSON store ang gagamitin:', err.message);
+  }
+}
+
+function persist() {
+  writeLocal();
+  scheduleSync();
+}
+
 const now = () => new Date().toISOString();
 const byNewest = (a, b) => new Date(b.published_at || b.created_at || 0) - new Date(a.published_at || a.created_at || 0);
-const newId = (prefix) => `${prefix}_${crypto.randomUUID?.() ?? `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`}`;
+const newId = (prefix) => (isSupabaseConfigured() ? newUuid() : `${prefix}_${newUuid()}`);
 
 export const store = {
-  init: load,
+  init: async () => {
+    load();
+    await hydrate();
+  },
 
   // ---------- Artikulo ----------
   listArticles({ type, category, is_lead, limit, q } = {}) {
@@ -165,6 +281,15 @@ export const store = {
     state.editions.unshift(edition);
     persist();
     return edition;
+  },
+
+  updateEdition(id, patch) {
+    const index = state.editions.findIndex((e) => e.id === id);
+    if (index === -1) return null;
+    const next = { ...state.editions[index], ...patch, updated_at: now() };
+    state.editions[index] = next;
+    persist();
+    return next;
   },
 
   deleteEdition(id) {
