@@ -1,10 +1,13 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import 'dotenv/config';
+import dotenv from 'dotenv';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const serverRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(serverRoot, '..');
+
+dotenv.config({ path: path.join(serverRoot, '.env') });
+dotenv.config({ path: path.join(repoRoot, '.env') });
 
 const int = (value, fallback) => {
   const parsed = Number.parseInt(value ?? '', 10);
@@ -47,10 +50,21 @@ export const config = {
 
   // Lahat ng key ay server-side lamang — huwag ilagay ang mga ito sa client/ o portal/.
   supabase: {
-    url: process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '',
-    anonKey: process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY || '',
-    // Service-role key: lumalaktaw sa RLS ng schema.sql. Ito lang ang dapat gamitin sa server.
-    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || '',
+    url: process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    anonKey:
+      process.env.SUPABASE_ANON_KEY ||
+      process.env.SUPABASE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+      '',
+    // Service-role key: lumalaktaw sa RLS ng schema.sql. Kung wala, gagamitin ang anonKey.
+    serviceRoleKey:
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_SERVICE_KEY ||
+      process.env.SUPABASE_ANON_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+      '',
     schema: process.env.SUPABASE_SCHEMA || 'public',
   },
 

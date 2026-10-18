@@ -100,8 +100,19 @@ export function App() {
 
       try {
         const session = await portalApi.verifySession();
-        if (session?.data?.user) {
-          setUser(session.data.user);
+        const user =
+          session?.data?.user ||
+          session?.user ||
+          (session?.data?.sub
+            ? {
+                email: session.data.sub,
+                name: session.data.name || 'Tanggapan ng Patnugutan',
+                role: session.data.role || 'editor-in-chief',
+              }
+            : null);
+
+        if (user) {
+          setUser(user);
           loadAllData();
         } else {
           authStorage.clear();

@@ -102,8 +102,14 @@ export function LoginGate({ onLoginSuccess }) {
           </button>
         </form>
 
-        <div className="login-footnote">
-          Lihim na portal para lamang sa editorial board at mga awtorisadong patnugot ng Ang Himaya.
+        <div className="login-footnote" style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', alignItems: 'center' }}>
+          <span>Lihim na portal para lamang sa editorial board at mga awtorisadong patnugot ng Ang Himaya.</span>
+          <a
+            href={typeof window !== 'undefined' && window.location.port === '5174' ? 'http://localhost:5173/' : '/'}
+            style={{ color: 'var(--c-gold-600, #b8860b)', fontSize: '0.85rem', textDecoration: 'underline' }}
+          >
+            ← Bumalik sa Publikasyon
+          </a>
         </div>
       </div>
     </div>

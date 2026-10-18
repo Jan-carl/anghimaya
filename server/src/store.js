@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 import { config } from './config.js';
 import { slugify } from './lib/validate.js';
 import {
@@ -28,6 +29,7 @@ function load() {
     fs.writeFileSync(config.paths.store, JSON.stringify(state, null, 2), 'utf8');
     return;
   }
+
   try {
     const parsed = JSON.parse(fs.readFileSync(config.paths.store, 'utf8'));
     state = { ...structuredClone(EMPTY), ...parsed };

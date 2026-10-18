@@ -57,7 +57,20 @@ router.get(
   asyncHandler((req, res) => {
     const session = verifyToken(readBearer(req));
     if (!session) throw ApiError.unauthorized('Walang aktibong session.');
-    res.json({ data: session });
+
+    const user = {
+      email: session.sub,
+      name: session.name || 'Tanggapan ng Patnugutan',
+      role: session.role || 'editor-in-chief',
+    };
+
+    res.json({
+      data: {
+        session,
+        user,
+      },
+      user,
+    });
   }),
 );
 

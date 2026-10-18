@@ -3,6 +3,7 @@ import { useContent } from './hooks/useContent.js';
 import { SceneHero } from './scene/SceneHero.jsx';
 import { SceneErrorBoundary } from './scene/SceneErrorBoundary.jsx';
 import { NavBar } from './components/NavBar.jsx';
+import { Ticker } from './components/Ticker.jsx';
 import { TopStory } from './components/TopStory.jsx';
 import { Voices } from './components/Voices.jsx';
 import { Silakbo } from './components/Silakbo.jsx';
@@ -52,6 +53,7 @@ export function App() {
 
       <div className="publication">
         <NavBar articles={content.articles} onSelectArticle={setReadingArticle} />
+        <Ticker items={content.ticker} />
 
         <main>
           <TopStory
@@ -70,7 +72,7 @@ export function App() {
             rest={content.literary.rest}
             onSelectArticle={setReadingArticle}
           />
-          <Editions editions={[]} />
+          <Editions editions={content.editions || []} />
           <Masthead />
           <Subscribe />
         </main>

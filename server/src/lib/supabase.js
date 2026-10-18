@@ -51,9 +51,13 @@ export async function getClient() {
 }
 
 function toRow(collection, record) {
+  if (collection === 'articles') {
+    const { views, ...rest } = record;
+    return rest;
+  }
   if (collection !== 'editions') return { ...record };
   const { year, updated_at: _updated, ...rest } = record;
-  return { ...rest, published_year: year ?? null };
+  return { ...rest, published_year: year ? String(year) : '2026', issue: rest.issue || 'Isyu 1' };
 }
 
 function fromRow(collection, row) {
