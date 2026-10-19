@@ -62,38 +62,26 @@ ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ticker_alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE editions ENABLE ROW LEVEL SECURITY;
 
--- Public can read all published articles
+-- Public reads are allowed by RLS; writes go through the authenticated Express API
+-- using its server-only Supabase Secret/service-role key, which bypasses RLS.
+DROP POLICY IF EXISTS "Public articles are viewable by everyone" ON articles;
+DROP POLICY IF EXISTS "Editorial staff can insert articles" ON articles;
+DROP POLICY IF EXISTS "Editorial staff can update articles" ON articles;
+DROP POLICY IF EXISTS "Editorial staff can delete articles" ON articles;
 CREATE POLICY "Public articles are viewable by everyone" 
 ON articles FOR SELECT 
 USING (is_published = true);
 
--- Service role / authenticated editorial staff can insert/update/delete
-CREATE POLICY "Editorial staff can insert articles" 
-ON articles FOR INSERT 
-WITH CHECK (true);
-
-CREATE POLICY "Editorial staff can update articles" 
-ON articles FOR UPDATE 
-USING (true);
-
-CREATE POLICY "Editorial staff can delete articles" 
-ON articles FOR DELETE 
-USING (true);
-
 -- Ticker policies
+DROP POLICY IF EXISTS "Public can view active ticker alerts" ON ticker_alerts;
+DROP POLICY IF EXISTS "Editorial staff can manage ticker alerts" ON ticker_alerts;
 CREATE POLICY "Public can view active ticker alerts" 
 ON ticker_alerts FOR SELECT 
 USING (is_active = true);
 
-CREATE POLICY "Editorial staff can manage ticker alerts" 
-ON ticker_alerts FOR ALL 
-USING (true);
-
 -- Editions policies
+DROP POLICY IF EXISTS "Public can view editions" ON editions;
+DROP POLICY IF EXISTS "Editorial staff can manage editions" ON editions;
 CREATE POLICY "Public can view editions" 
 ON editions FOR SELECT 
-USING (true);
-
-CREATE POLICY "Editorial staff can manage editions" 
-ON editions FOR ALL 
 USING (true);

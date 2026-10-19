@@ -123,8 +123,11 @@ Parehong **opsyonal** — lahat ay gumagana nang walang sila. Walang key na nasa
 
 ### Supabase
 
-Patakarin ang `server/schema.sql` sa Supabase SQL Editor, tapus ilagay ang
-`SUPABASE_URL` at `SUPABASE_SERVICE_ROLE_KEY` sa `server/.env`.
+Patakarin ang `server/schema.sql` sa Supabase SQL Editor, saka ilagay ang
+`SUPABASE_URL` at server-only na `SUPABASE_SERVICE_ROLE_KEY` sa `server/.env`.
+Maaaring gamitin ang Secret API key (`sb_secret_...`) o ang legacy `service_role`
+key. Huwag ilagay ang privileged key sa `.env.local`, `client/`, o `portal/`.
+Hindi kailangan ang `@supabase/ssr` dito dahil Vite + Express ang project, hindi Next.js.
 
 - Sa boot, binabasa ng server ang tatlong talahanayan at pinapalitan ang laman ng
   `store.json`. Kung walang laman ang isang talahanayan, ang lokal na datos ang
@@ -132,6 +135,8 @@ Patakarin ang `server/schema.sql` sa Supabase SQL Editor, tapus ilagay ang
 - Sa bawat write, sinusunod ang buong estado (upsert + burahin ang nawala).
 - Kapag may error, **nananatiling lokal na store** ang ginagamit at nakikita ang
   detalye sa `GET /api/health`.
+- Public SELECT lang ang pinapayagan ng RLS policies; ang mga pagbabago ay dumadaan
+  sa authenticated Express API gamit ang server-only key.
 
 ### Cloudinary
 

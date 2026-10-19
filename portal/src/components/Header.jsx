@@ -10,6 +10,9 @@ import { useEffect, useState } from 'react';
  */
 export function Header({ user, onLogout }) {
   const [scrolled, setScrolled] = useState(false);
+  const publicSiteUrl = window.location.port === '5174'
+    ? `${window.location.protocol}//${window.location.hostname}:5173/`
+    : '/';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -35,6 +38,13 @@ export function Header({ user, onLogout }) {
 
         {user ? (
           <div className="portal-header-actions">
+            <a
+              href={publicSiteUrl}
+              className="btn btn--secondary btn--sm"
+              aria-label="Buksan ang pangunahing website"
+            >
+              Tingnan ang Website
+            </a>
             <button
               type="button"
               className="btn btn--danger-subtle btn--sm"

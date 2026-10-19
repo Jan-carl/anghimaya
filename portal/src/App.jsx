@@ -100,8 +100,14 @@ export function App() {
 
       try {
         const session = await portalApi.verifySession();
-        if (session?.data?.user) {
-          setUser(session.data.user);
+        const claims = session?.data;
+        const sessionUser = claims?.user ?? (
+          claims?.sub
+            ? { email: claims.sub, name: claims.name, role: claims.role }
+            : null
+        );
+        if (sessionUser) {
+          setUser(sessionUser);
           loadAllData();
         } else {
           authStorage.clear();

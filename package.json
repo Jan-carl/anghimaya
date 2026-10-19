@@ -10,12 +10,15 @@
   ],
   "scripts": {
     "install:all": "npm install && npm --prefix server install",
-    "dev": "npm --prefix client run dev",
+    "dev": "npx concurrently -n server,client,portal -c blue,green,magenta \"npm --prefix server run dev\" \"npm --prefix client run dev\" \"npm --prefix portal run dev\"",
     "dev:portal": "npm --prefix portal run dev",
     "dev:api": "npm --prefix server run dev",
     "build": "npm --prefix client run build",
     "build:portal": "npm --prefix portal run build",
     "build:all": "npm --prefix client run build && npm --prefix portal run build",
     "start": "npm --prefix server run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
   }
 }
